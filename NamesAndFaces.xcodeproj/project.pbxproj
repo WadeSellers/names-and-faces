@@ -31,7 +31,7 @@
 		5561D933F2D955635D3297F0 /* PersonEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditView.swift; sourceTree = "<group>"; };
 		55AF9469373BACDEF7F6147A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5674B0365241ACEBF76B7D7A /* ImportReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportReviewView.swift; sourceTree = "<group>"; };
-		7CCB7626731A4A362F366AFE /* NamesAndFaces.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NamesAndFaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7CCB7626731A4A362F366AFE /* NamesAndFaces.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NamesAndFaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE2FC894D8E5770AEF3BA2BA /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 		B5AC9E81CC2657830D1EC22F /* StudyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyView.swift; sourceTree = "<group>"; };
 		E9534BDFAA05C44E4125E07D /* StudySession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudySession.swift; sourceTree = "<group>"; };
@@ -216,6 +216,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GV76VP4G8V;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Names & Faces";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The camera is used to take a photo of a person for their flashcard.";
@@ -359,6 +360,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GV76VP4G8V;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Names & Faces";
 				INFOPLIST_KEY_NSCameraUsageDescription = "The camera is used to take a photo of a person for their flashcard.";

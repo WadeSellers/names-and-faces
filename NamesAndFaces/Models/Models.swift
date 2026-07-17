@@ -37,6 +37,8 @@ final class Person {
     var timesCorrect: Int
     var timesMissed: Int
     var lastReviewedAt: Date?
+    /// When this face joined the study rotation; nil = still waiting to be added.
+    var introducedAt: Date?
     var createdAt: Date
 
     init(name: String, imageData: Data, createdAt: Date = .now) {
@@ -57,5 +59,6 @@ extension Person {
         timesCorrect = 0
         timesMissed = 0
         lastReviewedAt = nil
+        introducedAt = nil
     }
 }

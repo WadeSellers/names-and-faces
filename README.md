@@ -7,7 +7,8 @@ An iPhone flashcard app for learning the names of a new cohort fast — built fo
 1. **Import the cohort PDF.** You get a multi-page PDF of portraits with names printed underneath. Import it in the app and on-device Apple frameworks do the rest: PDFKit renders each page, Vision detects every face and reads the name below it.
 2. **Review.** A grid shows each extracted face with its detected name. Fix any misreads, exclude bad detections, then save the cohort as a deck.
 3. **Study.** You see a face. Say the name. Tap the card to reveal the answer (tap again to hide it). Swipe right if you knew it, left if you didn't.
-4. **Repeat.** A missed face comes back a few cards later in the same session, and a Leitner box on each person carries progress between sessions — the faces you don't know yet show up first, the ones you've mastered fade to the back.
+4. **Grow the rotation at your own pace.** Studying starts with just three faces in rotation; the screen always shows how many are in rotation out of the total and how many are waiting. Tap **Add Face** whenever you're ready for one more — a new face introduces itself with its name showing before it gets quizzed. Rotation membership is saved, so the next session picks up where you left off.
+5. **Repeat.** The rotation cycles until you end the session. A missed face comes back a few cards later, and a Leitner box on each person tracks long-term progress — misses demote, clean recalls promote.
 
 You can also add a single person manually with the camera or photo library, for anyone the PDF scan missed.
 

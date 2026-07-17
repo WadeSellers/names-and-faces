@@ -1,58 +1,109 @@
 import Foundation
 import Observation
 
-/// One sitting with a deck. Weakest faces come first; a missed face comes
-/// back a few cards later and repeats until answered correctly, while the
-/// Leitner box on each person carries progress between sessions.
+/// Continuous study over a user-controlled rotation. The rotation starts at
+/// three faces and grows only when the user asks for one more; membership is
+/// persisted on each Person (`introducedAt`) so it survives between sittings.
+/// A face entering the rotation is shown once with its name (an intro card)
+/// before it gets quizzed. The rotation cycles until the user ends the session,
+/// with missed faces coming back a few cards later.
 @Observable
 final class StudySession {
-    private(set) var queue: [Person]
-    private(set) var firstTryCorrect = 0
-    private(set) var missedPeople: [Person] = []
+    static let startingRotationSize = 3
+
+    private(set) var queue: [Person] = []
+    private(set) var rotation: [Person] = []
+    private(set) var waiting: [Person] = []
 
     let totalPeople: Int
+
+    private var pendingIntro: Set<ObjectIdentifier> = []
     private var missedIDs: Set<ObjectIdentifier> = []
+    private var lastShown: Person?
 
     init(people: [Person]) {
-        // Shuffle, then bring the least-known boxes to the front.
-        let ordered = people.shuffled().sorted { $0.box < $1.box }
-        queue = ordered
-        totalPeople = ordered.count
+        totalPeople = people.count
+        // Introduction order = the order they came off the sheet.
+        let ordered = people.sorted {
+            $0.createdAt == $1.createdAt ? $0.name < $1.name : $0.createdAt < $1.createdAt
+        }
+        rotation = ordered.filter { $0.introducedAt != nil }
+        waiting = ordered.filter { $0.introducedAt == nil }
+
+        while rotation.count < Self.startingRotationSize, !waiting.isEmpty {
+            let next = waiting.removeFirst()
+            next.introducedAt = .now
+            rotation.append(next)
+            pendingIntro.insert(ObjectIdentifier(next))
+        }
+        rebuildQueue()
     }
 
     var current: Person? { queue.first }
-    var isFinished: Bool { queue.isEmpty }
 
-    var peopleRemaining: Int {
-        Set(queue.map { ObjectIdentifier($0) }).count
+    /// True while the current card is a face's first appearance (name shown).
+    var isIntroCard: Bool {
+        guard let current else { return false }
+        return pendingIntro.contains(ObjectIdentifier(current))
     }
 
-    var progress: Double {
-        guard totalPeople > 0 else { return 1 }
-        return Double(totalPeople - peopleRemaining) / Double(totalPeople)
+    var inRotationCount: Int { rotation.count }
+    var waitingCount: Int { waiting.count }
+    var canAddMore: Bool { !waiting.isEmpty }
+
+    /// The "one more face" button: pull the next person into the rotation
+    /// and show them immediately as an intro card.
+    func introduceNext() {
+        guard !waiting.isEmpty else { return }
+        let next = waiting.removeFirst()
+        next.introducedAt = .now
+        rotation.append(next)
+        pendingIntro.insert(ObjectIdentifier(next))
+        queue.insert(next, at: 0)
     }
 
     func answer(correct: Bool) {
         guard let person = queue.first else { return }
+        let id = ObjectIdentifier(person)
         queue.removeFirst()
-        person.lastReviewedAt = .now
+        lastShown = person
 
-        let firstAttempt = !missedIDs.contains(ObjectIdentifier(person))
-        if correct {
-            person.timesCorrect += 1
-            if firstAttempt {
-                firstTryCorrect += 1
-                person.box = min(Person.maxBox, person.box + 1)
-            }
+        if pendingIntro.contains(id) {
+            // Introduction acknowledged; quizzing starts on the next pass.
+            pendingIntro.remove(id)
         } else {
-            person.timesMissed += 1
-            person.box = max(0, person.box - 1)
-            if firstAttempt {
-                missedIDs.insert(ObjectIdentifier(person))
-                missedPeople.append(person)
+            person.lastReviewedAt = .now
+            if correct {
+                person.timesCorrect += 1
+                if missedIDs.contains(id) {
+                    // Recovery rep after a miss this session — no promotion yet.
+                    missedIDs.remove(id)
+                } else {
+                    person.box = min(Person.maxBox, person.box + 1)
+                }
+            } else {
+                person.timesMissed += 1
+                person.box = max(0, person.box - 1)
+                missedIDs.insert(id)
+                // Come back to this face after a few others.
+                queue.insert(person, at: min(3, queue.count))
             }
-            // Come back to this face after a few others.
-            queue.insert(person, at: min(3, queue.count))
         }
+
+        if queue.isEmpty {
+            rebuildQueue()
+        }
+    }
+
+    /// A fresh pass through the rotation: shuffled, weakest boxes first,
+    /// intro cards up front, and never the same face twice in a row.
+    private func rebuildQueue() {
+        var cycle = rotation.shuffled().sorted { $0.box < $1.box }
+        if cycle.count > 1, let lastShown, cycle.first === lastShown {
+            cycle.swapAt(0, 1)
+        }
+        let intros = cycle.filter { pendingIntro.contains(ObjectIdentifier($0)) }
+        let rest = cycle.filter { !pendingIntro.contains(ObjectIdentifier($0)) }
+        queue = intros + rest
     }
 }

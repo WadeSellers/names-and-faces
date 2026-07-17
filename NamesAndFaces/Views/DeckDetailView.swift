@@ -21,6 +21,10 @@ struct DeckDetailView: View {
         }
     }
 
+    private var inRotationCount: Int {
+        deck.people.filter { $0.introducedAt != nil }.count
+    }
+
     var body: some View {
         Group {
             if deck.people.isEmpty {
@@ -37,6 +41,7 @@ struct DeckDetailView: View {
                 ScrollView {
                     HStack(spacing: 12) {
                         Text("\(deck.people.count) \(deck.people.count == 1 ? "person" : "people")")
+                        Text("\(inRotationCount) in rotation")
                         Text("\(Int(deck.mastery * 100))% mastered")
                     }
                     .font(.subheadline)
