@@ -23,11 +23,17 @@ enum PDFExtractorError: LocalizedError {
 }
 
 /// Renders each PDF page, detects faces and printed text on-device with Vision,
-/// and pairs every face with the name printed beneath it.
+/// and pairs every face with the name printed beneath it. Tuned against real
+/// Playhouse cohort sheets (grids of headshots, name on one line below each photo).
 struct PDFExtractor {
     private struct TextLine {
         let string: String
         let rect: CGRect
+    }
+
+    private struct Entry {
+        let crop: CGRect
+        let name: String
     }
 
     static func extract(from url: URL, progress: @escaping (Int, Int) -> Void) throws -> [ExtractedCandidate] {
@@ -50,7 +56,7 @@ struct PDFExtractor {
 
     private static func render(_ page: PDFPage) -> UIImage {
         let bounds = page.bounds(for: .mediaBox)
-        let scale = min(4, max(2, 2200 / max(bounds.width, 1)))
+        let scale = min(4, max(2, 3000 / max(bounds.width, 1)))
         let size = CGSize(width: bounds.width * scale, height: bounds.height * scale)
         return page.thumbnail(of: size, for: .mediaBox)
     }
@@ -77,17 +83,9 @@ struct PDFExtractor {
                    height: normalized.height * height)
         }
 
-        var faces = (faceRequest.results ?? [])
+        let faces = (faceRequest.results ?? [])
             .map { pixelRect($0.boundingBox) }
             .filter { $0.width > 40 }
-
-        // Reading order: bucket into rows, then left to right.
-        let rowHeight = (faces.map(\.height).max() ?? 100) * 1.3
-        faces.sort { a, b in
-            let rowA = Int(a.midY / rowHeight)
-            let rowB = Int(b.midY / rowHeight)
-            return rowA == rowB ? a.minX < b.minX : rowA < rowB
-        }
 
         let lines: [TextLine] = (textRequest.results ?? []).compactMap { observation in
             guard let candidate = observation.topCandidates(1).first else { return nil }
@@ -98,34 +96,87 @@ struct PDFExtractor {
             return TextLine(string: string, rect: pixelRect(observation.boundingBox))
         }
 
-        return faces.map { face in
+        // Pass 1: pair every detected face with the name below it.
+        var entries: [Entry] = []
+        var usedLineIndices = Set<Int>()
+        var matchedGeometry: [(crop: CGRect, line: CGRect)] = []
+
+        for face in faces {
+            let (name, lineIndex) = nameBelow(face: face, lines: lines)
             let crop = portraitCrop(for: face, width: width, height: height)
-            let image = cgImage.cropping(to: crop).map { UIImage(cgImage: $0) }
+            entries.append(Entry(crop: crop, name: name))
+            if let lineIndex {
+                usedLineIndices.insert(lineIndex)
+                matchedGeometry.append((crop, lines[lineIndex].rect))
+            }
+        }
+
+        // Pass 2: a name-like line nobody claimed means the face detector missed
+        // a portrait (glasses, hair, low contrast). The photo sits directly above
+        // its name on these sheets, so synthesize a crop there using the median
+        // geometry of the matched pairs.
+        if !matchedGeometry.isEmpty {
+            let cropW = median(matchedGeometry.map(\.crop.width))
+            let cropH = median(matchedGeometry.map(\.crop.height))
+            let dx = median(matchedGeometry.map { $0.line.minX - $0.crop.minX })
+            let dy = median(matchedGeometry.map { $0.line.minY - $0.crop.maxY })
+
+            for (lineIndex, line) in lines.enumerated() {
+                guard !usedLineIndices.contains(lineIndex), looksLikeName(line.string) else { continue }
+
+                let faceAbove = faces.contains { face in
+                    face.maxY < line.rect.minY &&
+                    line.rect.minY - face.maxY < face.height * 4 &&
+                    abs(face.midX - line.rect.midX) < cropW
+                }
+                guard !faceAbove else { continue }
+
+                let raw = CGRect(x: line.rect.minX - dx,
+                                 y: line.rect.minY - dy - cropH,
+                                 width: cropW,
+                                 height: cropH)
+                let crop = raw.intersection(CGRect(x: 0, y: 0, width: width, height: height)).integral
+                // A crop that fell mostly off-page is a header, not a portrait.
+                guard crop.width * crop.height > cropW * cropH * 0.6 else { continue }
+                entries.append(Entry(crop: crop, name: line.string))
+            }
+        }
+
+        // Reading order: row buckets, then left to right.
+        let rowHeight = (entries.map(\.crop.height).max() ?? 100) * 1.3
+        entries.sort { a, b in
+            let rowA = Int(a.crop.midY / rowHeight)
+            let rowB = Int(b.crop.midY / rowHeight)
+            return rowA == rowB ? a.crop.minX < b.crop.minX : rowA < rowB
+        }
+
+        return entries.map { entry in
+            let image = cgImage.cropping(to: entry.crop).map { UIImage(cgImage: $0) }
                 ?? UIImage(cgImage: cgImage)
-            return ExtractedCandidate(image: image, name: nameBelow(face: face, lines: lines))
+            return ExtractedCandidate(image: image, name: entry.name)
         }
     }
 
     /// The name is the text line(s) directly under the face, horizontally aligned with it.
-    private static func nameBelow(face: CGRect, lines: [TextLine]) -> String {
+    private static func nameBelow(face: CGRect, lines: [TextLine]) -> (name: String, lineIndex: Int?) {
         let horizontalSpan = face.insetBy(dx: -face.width * 0.75, dy: 0)
-        let below = lines
-            .filter { line in
+        let below = lines.enumerated()
+            .filter { _, line in
                 line.rect.minY > face.maxY - face.height * 0.1 &&
-                line.rect.minY < face.maxY + face.height * 2.2 &&
+                line.rect.minY < face.maxY + face.height * 3.5 &&
                 line.rect.midX > horizontalSpan.minX &&
                 line.rect.midX < horizontalSpan.maxX
             }
-            .sorted { $0.rect.minY < $1.rect.minY }
+            .sorted { $0.element.rect.minY < $1.element.rect.minY }
 
-        guard let first = below.first else { return "" }
+        guard let (firstIndex, first) = below.first else { return ("", nil) }
         var name = first.string
         // A name split across two tightly stacked lines ("Jane" / "Doe").
-        if let second = below.dropFirst().first,
+        if let (_, second) = below.dropFirst().first,
            second.rect.minY - first.rect.maxY < first.rect.height * 0.9 {
             name += " " + second.string
         }
-        return name
+        return (name, firstIndex)
     }
 
     /// Expand the detected face rect to a portrait-style crop (hair, chin, shoulders).
@@ -138,5 +189,19 @@ struct PDFExtractor {
                           width: face.width + padX * 2,
                           height: face.height + padTop + padBottom)
         return rect.intersection(CGRect(x: 0, y: 0, width: width, height: height)).integral
+    }
+
+    private static func looksLikeName(_ string: String) -> Bool {
+        guard string.count <= 40,
+              string.rangeOfCharacter(from: .decimalDigits) == nil,
+              let first = string.unicodeScalars.first,
+              CharacterSet.uppercaseLetters.contains(first) else { return false }
+        let words = string.split(separator: " ")
+        return words.count >= 2 && words.count <= 5
+    }
+
+    private static func median(_ values: [CGFloat]) -> CGFloat {
+        let sorted = values.sorted()
+        return sorted[sorted.count / 2]
     }
 }
