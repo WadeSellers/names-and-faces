@@ -1,15 +1,18 @@
 import SwiftUI
+import SwiftData
 
-/// The flashcard screen: face up front, tap to toggle the name,
-/// swipe right for "got it," left for "missed it." The rotation grows
-/// only when the user taps Add Face; new faces introduce themselves
-/// with their name showing.
+/// The flashcard screen: a card stack with the next face peeking from
+/// behind. Tap to reveal the name, swipe right for "got it," left for
+/// "missed it." The rotation grows only when the user taps Add Face.
 struct StudyView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var session: StudySession
     @State private var revealed: Bool
     @State private var dragOffset: CGSize = .zero
+    @State private var correctPulse = 0
+    @State private var missPulse = 0
+    @State private var croppingPerson: Person?
 
     init(people: [Person]) {
         let session = StudySession(people: people)
@@ -17,11 +20,30 @@ struct StudyView: View {
         _revealed = State(initialValue: session.isIntroCard)
     }
 
+    private struct StackCard: Identifiable {
+        let person: Person
+        let depth: Int
+        var id: PersistentIdentifier { person.persistentModelID }
+    }
+
+    private var stack: [StackCard] {
+        session.queue.prefix(2).enumerated().map { StackCard(person: $0.element, depth: $0.offset) }
+    }
+
     var body: some View {
         NavigationStack {
-            Group {
-                if let person = session.current {
-                    card(for: person)
+            ZStack {
+                backdrop
+
+                if session.current != nil {
+                    VStack(spacing: 18) {
+                        Spacer(minLength: 0)
+                        cardStack
+                        hintText
+                        rotationStatus
+                        answerButtons
+                        Spacer(minLength: 8)
+                    }
                 } else {
                     ContentUnavailableView("Nothing to study", systemImage: "person.crop.rectangle.stack")
                 }
@@ -30,145 +52,132 @@ struct StudyView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("End") { dismiss() }
+                        .fontWeight(.medium)
                 }
                 ToolbarItem(placement: .principal) {
-                    ProgressView(value: Double(session.inRotationCount), total: Double(max(session.totalPeople, 1)))
-                        .frame(width: 140)
+                    ProgressView(value: Double(session.inRotationCount),
+                                 total: Double(max(session.totalPeople, 1)))
+                        .tint(.accentColor)
+                        .frame(width: 132)
+                }
+            }
+        }
+        .sensoryFeedback(.impact(flexibility: .soft), trigger: revealed)
+        .sensoryFeedback(.success, trigger: correctPulse)
+        .sensoryFeedback(.error, trigger: missPulse)
+        .sensoryFeedback(.impact(weight: .medium), trigger: session.inRotationCount)
+        .fullScreenCover(item: $croppingPerson) { person in
+            let originalData = person.originalImageData ?? person.imageData
+            if let original = UIImage(data: originalData) {
+                CropEditorView(image: original, initialCrop: person.crop) { crop, croppedImage in
+                    person.originalImageData = originalData
+                    person.crop = crop
+                    person.imageData = crop == nil
+                        ? originalData
+                        : (croppedImage.jpegData(compressionQuality: 0.85) ?? person.imageData)
                 }
             }
         }
     }
 
-    // MARK: - Card
+    private var backdrop: some View {
+        LinearGradient(colors: [Color.accentColor.opacity(0.14), .clear],
+                       startPoint: .top,
+                       endPoint: .center)
+            .ignoresSafeArea()
+    }
 
-    private func card(for person: Person) -> some View {
-        VStack(spacing: 16) {
-            Spacer(minLength: 0)
+    // MARK: - Card stack
 
-            ZStack {
-                FaceImage(data: person.imageData)
-                    .clipShape(RoundedRectangle(cornerRadius: 24))
-                    .overlay(alignment: .top) {
-                        if session.isIntroCard {
-                            Text("New Face")
-                                .font(.subheadline.bold())
-                                .padding(.horizontal, 14)
-                                .padding(.vertical, 6)
-                                .background(Color.accentColor, in: Capsule())
-                                .foregroundStyle(.white)
-                                .padding(.top, 12)
-                        }
-                    }
-                    .overlay(alignment: .bottom) {
-                        if revealed {
-                            Text(person.name)
-                                .font(.title.bold())
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 12)
-                                .frame(maxWidth: .infinity)
-                                .background(.thinMaterial)
-                                .transition(.move(edge: .bottom).combined(with: .opacity))
-                        }
-                    }
-                    .clipShape(RoundedRectangle(cornerRadius: 24))
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 24)
-                            .strokeBorder(.quaternary, lineWidth: 1)
-                    }
-                    .overlay {
-                        swipeBadge
-                    }
+    private var cardStack: some View {
+        ZStack {
+            ForEach(stack) { card in
+                studyCard(for: card)
+                    .zIndex(card.depth == 0 ? 2 : 1)
             }
-            .aspectRatio(3 / 4, contentMode: .fit)
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal, 24)
-            .offset(dragOffset)
-            .rotationEffect(.degrees(Double(dragOffset.width) / 20))
-            .contentShape(Rectangle())
+        }
+        .aspectRatio(3 / 4, contentMode: .fit)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 28)
+    }
+
+    private func studyCard(for card: StackCard) -> some View {
+        let isTop = card.depth == 0
+        return FaceCard(person: card.person,
+                        revealed: isTop && revealed,
+                        isIntro: isTop && session.isIntroCard,
+                        dragWidth: isTop ? dragOffset.width : 0,
+                        onCrop: isTop ? { croppingPerson = card.person } : nil)
+            .scaleEffect(isTop ? 1 : 0.93, anchor: .top)
+            .offset(isTop ? dragOffset : CGSize(width: 0, height: 18))
+            .opacity(isTop ? 1 : 0.65)
+            .rotationEffect(.degrees(isTop ? Double(dragOffset.width) / 22 : 0))
             .onTapGesture {
+                guard isTop else { return }
                 withAnimation(.snappy) { revealed.toggle() }
             }
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        dragOffset = value.translation
-                    }
-                    .onEnded { value in
-                        if value.translation.width > 110 {
-                            complete(correct: true)
-                        } else if value.translation.width < -110 {
-                            complete(correct: false)
-                        } else {
-                            withAnimation(.spring) { dragOffset = .zero }
-                        }
-                    }
-            )
-            .id(ObjectIdentifier(person))
+            .gesture(isTop ? dragGesture : nil)
+            .transition(.asymmetric(insertion: .scale(scale: 0.9).combined(with: .opacity),
+                                    removal: .identity))
+    }
 
-            Text(hint(for: person))
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .multilineTextAlignment(.center)
-                .padding(.horizontal)
-
-            rotationStatus
-
-            HStack(spacing: 60) {
-                Button {
-                    complete(correct: false)
-                } label: {
-                    Image(systemName: "xmark")
-                        .font(.title2.bold())
-                        .frame(width: 60, height: 60)
-                }
-                .buttonStyle(.bordered)
-                .clipShape(Circle())
-                .tint(.red)
-
-                Button {
-                    complete(correct: true)
-                } label: {
-                    Image(systemName: "checkmark")
-                        .font(.title2.bold())
-                        .frame(width: 60, height: 60)
-                }
-                .buttonStyle(.bordered)
-                .clipShape(Circle())
-                .tint(.green)
+    private var dragGesture: some Gesture {
+        DragGesture()
+            .onChanged { value in
+                dragOffset = value.translation
             }
-
-            Spacer(minLength: 12)
-        }
+            .onEnded { value in
+                if value.translation.width > 110 {
+                    complete(correct: true)
+                } else if value.translation.width < -110 {
+                    complete(correct: false)
+                } else {
+                    withAnimation(.spring(duration: 0.35)) { dragOffset = .zero }
+                }
+            }
     }
 
-    private func hint(for person: Person) -> String {
-        if session.isIntroCard {
-            return "New face — remember \(person.name). Swipe right when you've got them."
-        }
-        return revealed
-            ? "Swipe right if you knew it, left if you didn't."
-            : "Say their name, then tap the card to check."
-    }
+    // MARK: - Under-card chrome
 
-    // MARK: - Rotation status
+    private var hintText: some View {
+        Group {
+            if let person = session.current {
+                if session.isIntroCard {
+                    Text("New face — remember **\(person.name)**. Swipe right when you've got them.")
+                } else if revealed {
+                    Text("Swipe right if you knew it, left if you didn't.")
+                } else {
+                    Text("Say their name, then tap the card to check.")
+                }
+            }
+        }
+        .font(.footnote)
+        .foregroundStyle(.secondary)
+        .multilineTextAlignment(.center)
+        .frame(minHeight: 34)
+        .padding(.horizontal, 32)
+    }
 
     private var rotationStatus: some View {
         HStack(spacing: 12) {
             VStack(alignment: .leading, spacing: 2) {
                 Text("\(session.inRotationCount) of \(session.totalPeople) in rotation")
                     .font(.subheadline.bold())
+                    .monospacedDigit()
+                    .contentTransition(.numericText())
                 Text(session.canAddMore
                      ? "\(session.waitingCount) waiting to be added"
                      : "Everyone's in — keep going!")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .monospacedDigit()
+                    .contentTransition(.numericText())
             }
 
             Spacer()
 
             Button {
-                withAnimation(.snappy) {
+                withAnimation(.spring(duration: 0.4)) {
                     session.introduceNext()
                     revealed = true
                     dragOffset = .zero
@@ -178,41 +187,148 @@ struct StudyView: View {
                     .font(.subheadline.bold())
             }
             .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.capsule)
             .disabled(!session.canAddMore)
         }
-        .padding(.horizontal, 24)
-        .padding(.vertical, 4)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.quinary, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .padding(.horizontal, 28)
     }
 
-    @ViewBuilder
-    private var swipeBadge: some View {
-        if session.isIntroCard {
-            EmptyView()
-        } else if dragOffset.width > 40 {
-            badge("Got It", color: .green)
-        } else if dragOffset.width < -40 {
-            badge("Missed", color: .red)
+    private var answerButtons: some View {
+        HStack(spacing: 56) {
+            answerButton(symbol: "xmark", tint: .red) { complete(correct: false) }
+            answerButton(symbol: "checkmark", tint: .green) { complete(correct: true) }
         }
     }
 
-    private func badge(_ text: String, color: Color) -> some View {
-        Text(text)
-            .font(.title2.bold())
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(color.opacity(0.85), in: Capsule())
-            .foregroundStyle(.white)
+    private func answerButton(symbol: String, tint: Color, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: symbol)
+                .font(.title2.bold())
+                .foregroundStyle(tint)
+                .frame(width: 62, height: 62)
+                .background(.background, in: Circle())
+                .overlay(Circle().strokeBorder(tint.opacity(0.35), lineWidth: 1.5))
+                .shadow(color: .black.opacity(0.10), radius: 8, y: 4)
+        }
+        .buttonStyle(.plain)
     }
 
+    // MARK: - Answering
+
     private func complete(correct: Bool) {
+        if !session.isIntroCard {
+            if correct { correctPulse += 1 } else { missPulse += 1 }
+        }
         let exitX: CGFloat = correct ? 700 : -700
-        withAnimation(.easeOut(duration: 0.2)) {
+        withAnimation(.easeOut(duration: 0.22)) {
             dragOffset = CGSize(width: exitX, height: dragOffset.height)
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            session.answer(correct: correct)
+            withAnimation(.spring(duration: 0.4)) {
+                session.answer(correct: correct)
+                dragOffset = .zero
+            }
             revealed = session.isIntroCard
-            dragOffset = .zero
         }
+    }
+}
+
+// MARK: - Card
+
+/// One face card: portrait, optional "New Face" ribbon, name scrim when
+/// revealed, and green/red edge glow proportional to the drag.
+private struct FaceCard: View {
+    let person: Person
+    let revealed: Bool
+    let isIntro: Bool
+    let dragWidth: CGFloat
+    var onCrop: (() -> Void)?
+
+    private var dragTint: Color? {
+        guard !isIntro, abs(dragWidth) > 24 else { return nil }
+        return dragWidth > 0 ? .green : .red
+    }
+
+    var body: some View {
+        FaceImage(data: person.imageData)
+            .overlay(alignment: .bottom) {
+                if revealed {
+                    nameScrim
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+            }
+            .overlay(alignment: .top) {
+                if isIntro {
+                    Text("New Face")
+                        .font(.subheadline.bold())
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 6)
+                        .background(Color.accentColor, in: Capsule())
+                        .foregroundStyle(.white)
+                        .padding(.top, 14)
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
+            .overlay(alignment: .topTrailing) {
+                // The moment the name is showing is when you notice a sliver
+                // of printed text in the photo — offer the fix right there.
+                if revealed, let onCrop {
+                    Button(action: onCrop) {
+                        Image(systemName: "crop")
+                            .font(.subheadline.bold())
+                            .foregroundStyle(.primary)
+                            .padding(9)
+                            .background(.thinMaterial, in: Circle())
+                    }
+                    .padding(12)
+                    .transition(.opacity)
+                }
+            }
+            .overlay {
+                if let dragTint {
+                    RoundedRectangle(cornerRadius: 28, style: .continuous)
+                        .fill(dragTint.opacity(min(abs(dragWidth) / 600, 0.30)))
+                }
+            }
+            .overlay(alignment: dragWidth >= 0 ? .topLeading : .topTrailing) {
+                if let dragTint {
+                    Text(dragTint == .green ? "Got It" : "Missed")
+                        .font(.title3.bold())
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 7)
+                        .background(dragTint.opacity(0.9), in: Capsule())
+                        .foregroundStyle(.white)
+                        .rotationEffect(.degrees(dragWidth >= 0 ? -8 : 8))
+                        .padding(18)
+                }
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 28, style: .continuous)
+                    .strokeBorder(.quaternary, lineWidth: 1)
+            }
+            .shadow(color: .black.opacity(0.16), radius: 22, y: 12)
+            .contentShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+    }
+
+    private var nameScrim: some View {
+        VStack(spacing: 0) {
+            Text(person.name)
+                .font(.title.bold())
+                .foregroundStyle(.white)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 18)
+                .padding(.top, 44)
+                .padding(.bottom, 20)
+                .frame(maxWidth: .infinity)
+        }
+        .background(
+            LinearGradient(colors: [.clear, .black.opacity(0.75)],
+                           startPoint: .top,
+                           endPoint: .bottom)
+        )
     }
 }

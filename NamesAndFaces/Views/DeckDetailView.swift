@@ -7,6 +7,7 @@ struct DeckDetailView: View {
     @Bindable var deck: Deck
 
     @Environment(\.modelContext) private var context
+    @Namespace private var studyZoom
 
     @State private var showingFileImporter = false
     @State private var importRequest: ImportRequest?
@@ -39,16 +40,7 @@ struct DeckDetailView: View {
                 }
             } else {
                 ScrollView {
-                    HStack(spacing: 12) {
-                        Text("\(deck.people.count) \(deck.people.count == 1 ? "person" : "people")")
-                        Text("\(inRotationCount) in rotation")
-                        Text("\(Int(deck.mastery * 100))% mastered")
-                    }
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                    .padding(.top, 8)
+                    statsHeader
 
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 100), spacing: 12)], spacing: 16) {
                         ForEach(sortedPeople) { person in
@@ -60,8 +52,8 @@ struct DeckDetailView: View {
                             .buttonStyle(.plain)
                         }
                     }
-                    .padding()
-                    .padding(.bottom, 80)
+                    .padding(.horizontal)
+                    .padding(.bottom, 90)
                 }
             }
         }
@@ -83,8 +75,10 @@ struct DeckDetailView: View {
                     if !deck.people.isEmpty {
                         Divider()
                         Button(role: .destructive) {
-                            for person in deck.people {
-                                person.resetProgress()
+                            withAnimation {
+                                for person in deck.people {
+                                    person.resetProgress()
+                                }
                             }
                         } label: {
                             Label("Reset Progress", systemImage: "arrow.counterclockwise")
@@ -103,9 +97,12 @@ struct DeckDetailView: View {
                     Label("Study", systemImage: "rectangle.on.rectangle.angled")
                         .font(.headline)
                         .frame(maxWidth: .infinity)
+                        .padding(.vertical, 4)
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
+                .shadow(color: Color.accentColor.opacity(0.35), radius: 12, y: 6)
+                .matchedTransitionSource(id: "study", in: studyZoom)
                 .padding()
                 .background(.bar)
             }
@@ -137,31 +134,90 @@ struct DeckDetailView: View {
         }
         .fullScreenCover(isPresented: $showingStudy) {
             StudyView(people: deck.people)
+                .navigationTransition(.zoom(sourceID: "study", in: studyZoom))
         }
     }
+
+    private var statsHeader: some View {
+        HStack(spacing: 0) {
+            stat(value: "\(deck.people.count)", label: "People")
+            divider
+            stat(value: "\(inRotationCount)", label: "In Rotation")
+            divider
+            stat(value: "\(Int(deck.mastery * 100))%", label: "Mastered")
+        }
+        .padding(.vertical, 12)
+        .background(.quinary, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .padding(.horizontal)
+        .padding(.top, 8)
+        .padding(.bottom, 4)
+    }
+
+    private var divider: some View {
+        Rectangle()
+            .fill(.quaternary)
+            .frame(width: 1, height: 30)
+    }
+
+    private func stat(value: String, label: String) -> some View {
+        VStack(spacing: 2) {
+            Text(value)
+                .font(.title3.bold())
+                .monospacedDigit()
+                .contentTransition(.numericText())
+            Text(label)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+    }
 }
+
+// MARK: - Cell
 
 private struct PersonCell: View {
     let person: Person
 
     var body: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: 7) {
             FaceImage(data: person.imageData)
                 .aspectRatio(3 / 4, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                .overlay(alignment: .bottom) {
-                    ProgressView(value: person.mastery)
-                        .tint(.accentColor)
-                        .padding(.horizontal, 8)
-                        .padding(.bottom, 6)
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .overlay(alignment: .topTrailing) {
+                    if person.introducedAt != nil {
+                        Circle()
+                            .fill(Color.accentColor)
+                            .frame(width: 10, height: 10)
+                            .overlay(Circle().strokeBorder(.background, lineWidth: 2))
+                            .padding(7)
+                    }
                 }
+                .shadow(color: .black.opacity(0.10), radius: 6, y: 3)
 
             Text(person.name)
-                .font(.caption)
+                .font(.caption.weight(.medium))
                 .lineLimit(2)
                 .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity)
+
+            LevelIndicator(box: person.box)
         }
+    }
+}
+
+/// Five tiny segments showing the Leitner level at a glance.
+private struct LevelIndicator: View {
+    let box: Int
+
+    var body: some View {
+        HStack(spacing: 3) {
+            ForEach(0..<Person.maxBox, id: \.self) { index in
+                Capsule()
+                    .fill(index < box ? Color.accentColor : Color(.quaternarySystemFill))
+                    .frame(height: 4)
+            }
+        }
+        .padding(.horizontal, 10)
     }
 }
 

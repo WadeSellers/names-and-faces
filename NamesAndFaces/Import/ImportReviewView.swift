@@ -7,8 +7,8 @@ struct ImportRequest: Identifiable {
     let url: URL
 }
 
-/// Runs extraction on a picked PDF, then lets the user fix names and
-/// exclude bad detections before the cards are saved to the deck.
+/// Runs extraction on a picked PDF, then lets the user fix names, crop
+/// portraits, and exclude bad detections before the cards are saved.
 struct ImportReviewView: View {
     let deck: Deck
     let url: URL
@@ -17,13 +17,19 @@ struct ImportReviewView: View {
     @Environment(\.dismiss) private var dismiss
 
     private enum Phase {
-        case extracting(String)
+        case extracting(page: Int, total: Int)
         case review
         case failed(String)
     }
 
-    @State private var phase: Phase = .extracting("Reading PDF…")
+    private struct CropTarget: Identifiable {
+        let id = UUID()
+        let index: Int
+    }
+
+    @State private var phase: Phase = .extracting(page: 0, total: 0)
     @State private var candidates: [ExtractedCandidate] = []
+    @State private var cropTarget: CropTarget?
 
     private var includedCount: Int {
         candidates.filter(\.include).count
@@ -33,13 +39,8 @@ struct ImportReviewView: View {
         NavigationStack {
             Group {
                 switch phase {
-                case .extracting(let message):
-                    VStack(spacing: 16) {
-                        ProgressView()
-                            .controlSize(.large)
-                        Text(message)
-                            .foregroundStyle(.secondary)
-                    }
+                case .extracting(let page, let total):
+                    extractingView(page: page, total: total)
                 case .failed(let message):
                     ContentUnavailableView {
                         Label("Nothing Found", systemImage: "person.crop.rectangle.badge.plus")
@@ -64,6 +65,8 @@ struct ImportReviewView: View {
                     } label: {
                         Text("Add \(includedCount) \(includedCount == 1 ? "Person" : "People")")
                             .font(.headline)
+                            .monospacedDigit()
+                            .contentTransition(.numericText())
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
@@ -76,11 +79,40 @@ struct ImportReviewView: View {
         }
         .interactiveDismissDisabled()
         .task { await extract() }
+        .fullScreenCover(item: $cropTarget) { target in
+            let candidate = candidates[target.index]
+            CropEditorView(image: candidate.original, initialCrop: candidate.crop) { region, croppedImage in
+                withAnimation(.snappy) {
+                    candidates[target.index].crop = region
+                    candidates[target.index].image = croppedImage
+                }
+            }
+        }
+    }
+
+    // MARK: - Phases
+
+    private func extractingView(page: Int, total: Int) -> some View {
+        VStack(spacing: 20) {
+            Image(systemName: "text.below.photo")
+                .font(.system(size: 52))
+                .foregroundStyle(Color.accentColor)
+                .symbolEffect(.variableColor.iterative, options: .repeating)
+
+            Text(total > 0 ? "Scanning page \(page) of \(total)…" : "Reading PDF…")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .monospacedDigit()
+                .contentTransition(.numericText())
+
+            ProgressView(value: total > 0 ? Double(page) : 0, total: Double(max(total, 1)))
+                .frame(width: 200)
+        }
     }
 
     private var reviewGrid: some View {
         ScrollView {
-            Text("Check each name against its face. Tap the circle to leave someone out.")
+            Text("Check each name against its face. Crop a photo if any of the printed name sneaked in, and tap the circle to leave someone out.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -89,7 +121,11 @@ struct ImportReviewView: View {
 
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 16) {
                 ForEach($candidates) { $candidate in
-                    CandidateCell(candidate: $candidate)
+                    CandidateCell(candidate: $candidate) {
+                        if let index = candidates.firstIndex(where: { $0.id == candidate.id }) {
+                            cropTarget = CropTarget(index: index)
+                        }
+                    }
                 }
             }
             .padding()
@@ -101,7 +137,7 @@ struct ImportReviewView: View {
             let found = try await Task.detached(priority: .userInitiated) { [url] in
                 try PDFExtractor.extract(from: url) { page, total in
                     Task { @MainActor in
-                        phase = .extracting("Scanning page \(page) of \(total)…")
+                        withAnimation { phase = .extracting(page: page, total: total) }
                     }
                 }
             }.value
@@ -110,7 +146,7 @@ struct ImportReviewView: View {
                 phase = .failed("No faces were detected in that PDF. You can still add people one at a time with a photo.")
             } else {
                 candidates = found
-                phase = .review
+                withAnimation(.snappy) { phase = .review }
             }
         } catch {
             phase = .failed(error.localizedDescription)
@@ -122,6 +158,8 @@ struct ImportReviewView: View {
             let name = candidate.name.trimmingCharacters(in: .whitespacesAndNewlines)
             guard let data = candidate.image.resized(maxDimension: 900).jpegData(compressionQuality: 0.8) else { continue }
             let person = Person(name: name.isEmpty ? "Unknown" : name, imageData: data)
+            person.originalImageData = candidate.original.resized(maxDimension: 900).jpegData(compressionQuality: 0.8)
+            person.crop = candidate.crop
             context.insert(person)
             person.deck = deck
         }
@@ -129,8 +167,11 @@ struct ImportReviewView: View {
     }
 }
 
+// MARK: - Cell
+
 private struct CandidateCell: View {
     @Binding var candidate: ExtractedCandidate
+    let onCrop: () -> Void
 
     var body: some View {
         VStack(spacing: 8) {
@@ -139,14 +180,24 @@ private struct CandidateCell: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .aspectRatio(3 / 4, contentMode: .fit)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                 .overlay(alignment: .topTrailing) {
                     Button {
-                        candidate.include.toggle()
+                        withAnimation(.snappy) { candidate.include.toggle() }
                     } label: {
                         Image(systemName: candidate.include ? "checkmark.circle.fill" : "circle")
                             .font(.title2)
+                            .symbolEffect(.bounce, value: candidate.include)
                             .foregroundStyle(candidate.include ? Color.accentColor : .secondary)
+                            .background(.thinMaterial, in: Circle())
+                    }
+                    .padding(6)
+                }
+                .overlay(alignment: .bottomTrailing) {
+                    Button(action: onCrop) {
+                        Image(systemName: "crop")
+                            .font(.subheadline.bold())
+                            .padding(7)
                             .background(.thinMaterial, in: Circle())
                     }
                     .padding(6)

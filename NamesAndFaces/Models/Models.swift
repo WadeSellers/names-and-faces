@@ -24,12 +24,25 @@ extension Deck {
     }
 }
 
+/// A user-adjusted crop, normalized 0...1 with a top-left origin,
+/// relative to the original image.
+struct CropRegion: Codable, Equatable {
+    var x: Double
+    var y: Double
+    var width: Double
+    var height: Double
+}
+
 @Model
 final class Person {
     static let maxBox = 4
 
     var name: String
+    /// What every screen displays — already cropped if a crop is set.
     @Attribute(.externalStorage) var imageData: Data
+    /// The uncropped source, kept so crops are non-destructive and re-editable.
+    @Attribute(.externalStorage) var originalImageData: Data?
+    var crop: CropRegion?
     var deck: Deck?
 
     /// Leitner box 0 (unknown) ... 4 (mastered). Drives study ordering.

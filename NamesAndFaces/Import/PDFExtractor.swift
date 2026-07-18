@@ -6,8 +6,12 @@ import Vision
 /// A face + name pair pulled out of the PDF, awaiting user review.
 struct ExtractedCandidate: Identifiable {
     let id = UUID()
+    /// Displayed (and saved) portrait — reflects any user crop.
     var image: UIImage
+    /// The untouched extraction, kept so crops stay re-editable.
+    let original: UIImage
     var name: String
+    var crop: CropRegion?
     var include: Bool = true
 }
 
@@ -153,7 +157,7 @@ struct PDFExtractor {
         return entries.map { entry in
             let image = cgImage.cropping(to: entry.crop).map { UIImage(cgImage: $0) }
                 ?? UIImage(cgImage: cgImage)
-            return ExtractedCandidate(image: image, name: entry.name)
+            return ExtractedCandidate(image: image, original: image, name: entry.name)
         }
     }
 
