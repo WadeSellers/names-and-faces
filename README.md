@@ -9,7 +9,7 @@ An iPhone flashcard app for learning the names of a new cohort fast — built fo
 3. **Crop anywhere.** If a sliver of the printed name sneaked into a portrait, crop it out — from the review grid, from a person's card, or right on the flashcard the moment you notice it. The Photos-style editor zooms into your crop as you adjust and back out when you loosen it, and crops are non-destructive (the original is always kept).
 4. **Study.** You see a face. Say the name. Tap the card to reveal the answer (tap again to hide it). Swipe right if you knew it, left if you didn't.
 5. **Grow the rotation at your own pace.** Studying starts with just three faces in rotation; the screen always shows how many are in rotation out of the total and how many are waiting. Tap **Add Face** whenever you're ready for one more — a new face introduces itself with its name showing before it gets quizzed. Rotation membership is saved, so the next session picks up where you left off.
-6. **Repeat.** The rotation cycles until you end the session. A missed face comes back a few cards later, and a Leitner box on each person tracks long-term progress — misses demote, clean recalls promote.
+6. **Repeat — with frequency that follows mastery.** The rotation cycles until you end the session, and how often a face appears per pass depends on its level: brand-new or struggling faces show up three times with expanding gaps, easing to twice and then once as you level them up (one level per pass, so locking a face in takes separate passes). A missed face comes back a few cards later *and* drops a level, so it automatically gets more frequent again.
 
 You can also add a single person manually with the camera or photo library, for anyone the PDF scan missed.
 

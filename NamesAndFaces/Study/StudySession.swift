@@ -4,9 +4,15 @@ import Observation
 /// Continuous study over a user-controlled rotation. The rotation starts at
 /// three faces and grows only when the user asks for one more; membership is
 /// persisted on each Person (`introducedAt`) so it survives between sittings.
-/// A face entering the rotation is shown once with its name (an intro card)
-/// before it gets quizzed. The rotation cycles until the user ends the session,
-/// with missed faces coming back a few cards later.
+///
+/// Frequency follows mastery (expanding retrieval practice): each pass
+/// through the deck, a level-0 face appears three times with widening gaps,
+/// a level-1 face twice, and everyone else once. A face levels up at most
+/// once per pass, so a new face earns its way down from 3× to 1× across
+/// three passes — and a miss drops its level, which automatically raises
+/// its frequency again. A face entering the rotation is shown once with its
+/// name (an intro card), with its first real quiz a few cards later while
+/// the name is still warm.
 @Observable
 final class StudySession {
     static let startingRotationSize = 3
@@ -19,6 +25,7 @@ final class StudySession {
 
     private var pendingIntro: Set<ObjectIdentifier> = []
     private var missedIDs: Set<ObjectIdentifier> = []
+    private var promotedThisPass: Set<ObjectIdentifier> = []
     private var lastShown: Person?
 
     init(people: [Person]) {
@@ -51,8 +58,9 @@ final class StudySession {
     var waitingCount: Int { waiting.count }
     var canAddMore: Bool { !waiting.isEmpty }
 
-    /// The "one more face" button: pull the next person into the rotation
-    /// and show them immediately as an intro card.
+    /// The "one more face" button: pull the next person into the rotation,
+    /// show them immediately as an intro card, and line up their first
+    /// quizzes with expanding gaps while the name is still warm.
     func introduceNext() {
         guard !waiting.isEmpty else { return }
         let next = waiting.removeFirst()
@@ -60,6 +68,8 @@ final class StudySession {
         rotation.append(next)
         pendingIntro.insert(ObjectIdentifier(next))
         queue.insert(next, at: 0)
+        insertAvoidingRepeat(next, around: 3)
+        insertAvoidingRepeat(next, around: 9)
     }
 
     func answer(correct: Bool) {
@@ -69,24 +79,27 @@ final class StudySession {
         lastShown = person
 
         if pendingIntro.contains(id) {
-            // Introduction acknowledged; quizzing starts on the next pass.
+            // Introduction acknowledged; quizzing starts a few cards later.
             pendingIntro.remove(id)
         } else {
             person.lastReviewedAt = .now
             if correct {
                 person.timesCorrect += 1
                 if missedIDs.contains(id) {
-                    // Recovery rep after a miss this session — no promotion yet.
+                    // Recovery rep after a miss this session — no promotion.
                     missedIDs.remove(id)
-                } else {
+                } else if !promotedThisPass.contains(id) {
+                    // One level per pass: locking a face in takes separate
+                    // passes, not one lucky streak of its repeats.
                     person.box = min(Person.maxBox, person.box + 1)
+                    promotedThisPass.insert(id)
                 }
             } else {
                 person.timesMissed += 1
                 person.box = max(0, person.box - 1)
                 missedIDs.insert(id)
                 // Come back to this face after a few others.
-                queue.insert(person, at: min(3, queue.count))
+                insertAvoidingRepeat(person, around: min(3, queue.count))
             }
         }
 
@@ -95,15 +108,62 @@ final class StudySession {
         }
     }
 
-    /// A fresh pass through the rotation: shuffled, weakest boxes first,
-    /// intro cards up front, and never the same face twice in a row.
+    // MARK: - Pass construction
+
+    /// How many times a face appears in one pass: 3× at level 0,
+    /// 2× at level 1, 1× from level 2 up.
+    private func appearances(of person: Person) -> Int {
+        max(1, 3 - person.box)
+    }
+
+    /// A fresh pass: shuffled, weakest levels first, intro cards up front,
+    /// never the same face twice in a row — then the extra appearances for
+    /// low-level faces are laid in with expanding gaps.
     private func rebuildQueue() {
-        var cycle = rotation.shuffled().sorted { $0.box < $1.box }
-        if cycle.count > 1, let lastShown, cycle.first === lastShown {
-            cycle.swapAt(0, 1)
+        promotedThisPass.removeAll()
+
+        var base = rotation.shuffled().sorted { $0.box < $1.box }
+        if base.count > 1, let lastShown, base.first === lastShown {
+            base.swapAt(0, 1)
         }
-        let intros = cycle.filter { pendingIntro.contains(ObjectIdentifier($0)) }
-        let rest = cycle.filter { !pendingIntro.contains(ObjectIdentifier($0)) }
+        let intros = base.filter { pendingIntro.contains(ObjectIdentifier($0)) }
+        let rest = base.filter { !pendingIntro.contains(ObjectIdentifier($0)) }
         queue = intros + rest
+
+        // A rotation of one can't space out repeats.
+        guard rotation.count > 1 else { return }
+
+        for person in base {
+            let extras = appearances(of: person) - 1
+            guard extras > 0,
+                  let first = queue.firstIndex(where: { $0 === person }) else { continue }
+            var anchor = first
+            for extra in 0..<extras {
+                // Short gap to the second look, a longer one to the third.
+                let gap = extra == 0 ? 3 : max(6, (queue.count - anchor) * 2 / 3)
+                let target = anchor + gap
+                let countBefore = queue.count
+                insertAvoidingRepeat(person, around: target)
+                guard queue.count > countBefore else { break }
+                anchor = min(target, queue.count - 1)
+            }
+        }
+    }
+
+    /// Insert near `index`, nudging forward so the same face never sits in
+    /// two consecutive slots (which would also break the card stack's
+    /// identity). If every slot from `index` on would clash, the copy is
+    /// dropped — that only happens when the person already holds the tail.
+    private func insertAvoidingRepeat(_ person: Person, around index: Int) {
+        var idx = min(max(index, 0), queue.count)
+        while idx <= queue.count {
+            let before = idx > 0 ? queue[idx - 1] : nil
+            let after = idx < queue.count ? queue[idx] : nil
+            if before !== person, after !== person {
+                queue.insert(person, at: idx)
+                return
+            }
+            idx += 1
+        }
     }
 }
