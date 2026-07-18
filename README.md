@@ -1,36 +1,52 @@
 # Names & Faces
 
-An iPhone flashcard app for learning the names of a new cohort fast — built for the moment a stack of new students walks into the Neighborhood Playhouse and you want to greet every one of them by name within a week.
+**Meet 23 strangers on Monday. Greet every one of them by name on Friday.**
 
-## How it works
+I work at a theater conservatory. A few times a year a brand-new cohort of students walks through the door, and somebody hands me a PDF — pages of headshots with names printed underneath. Wonderful people. Total strangers. And there is nothing warmer on this earth than someone who's met you exactly once saying *"Morning, Coraline"* like it was nothing.
 
-1. **Import the cohort PDF.** You get a multi-page PDF of portraits with names printed underneath. Import it in the app and on-device Apple frameworks do the rest: PDFKit renders each page, Vision detects every face and reads the name below it.
-2. **Review.** A grid shows each extracted face with its detected name. Fix any misreads, exclude bad detections, then save the cohort as a deck.
-3. **Crop anywhere.** If a sliver of the printed name sneaked into a portrait, crop it out — from the review grid, from a person's card, or right on the flashcard the moment you notice it. The Photos-style editor zooms into your crop as you adjust and back out when you loosen it, and crops are non-destructive (the original is always kept).
-4. **Study.** You see a face. Say the name. Tap the card to reveal the answer (tap again to hide it). Swipe right if you knew it, left if you didn't.
-5. **Grow the rotation at your own pace.** Studying starts with just three faces in rotation; the screen always shows how many are in rotation out of the total and how many are waiting. Tap **Add Face** whenever you're ready for one more — a new face introduces itself with its name showing before it gets quizzed. Rotation membership is saved, so the next session picks up where you left off.
-6. **Repeat — with frequency that follows mastery.** The rotation cycles until you end the session, and how often a face appears per pass depends on its level: brand-new or struggling faces show up three times with expanding gaps, easing to twice and then once as you level them up (one level per pass, so locking a face in takes separate passes). A missed face comes back a few cards later *and* drops a level, so it automatically gets more frequent again.
+So I built the thing that makes that happen.
 
-You can also add a single person manually with the camera or photo library, for anyone the PDF scan missed.
+## The magic trick 🎩
 
-## Architecture
+You import the PDF. That's it. That's the whole workflow.
 
-- **SwiftUI + SwiftData**, iOS 18+, iPhone only for now.
-- **Zero services, zero cost**: everything runs and is stored on-device. Photos of students never leave the phone — which is also the App Store privacy story if this ships publicly one day.
-- **Vision + PDFKit** for extraction ([PDFExtractor.swift](NamesAndFaces/Import/PDFExtractor.swift)): face rectangles and OCR run per page, and each face is paired with the text line(s) directly beneath it.
-- **Spaced repetition** ([StudySession.swift](NamesAndFaces/Study/StudySession.swift)): a simple Leitner system (boxes 0–4). Correct on first try promotes a box; a miss demotes one and re-queues the card within the session.
+In a couple of seconds, entirely on your phone, the app renders every page, **finds every face**, **reads the name printed under it**, and deals you a deck of flashcards. No typing 23 names. No cropping 23 photos.
 
-## Getting started
+(In our real test sheet, one headshot was simply too cool for Apple's face detector — dark background, great hair, an absolute legend. The app noticed an unclaimed *name* sitting there, figured the photo had to be right above it, and went and got it anyway. Nobody gets left behind.)
 
-1. Clone the repo and open `NamesAndFaces.xcodeproj` in Xcode 16 or newer.
-2. In **Signing & Capabilities**, select your development team.
-3. Build and run on your iPhone (or any iOS 18+ simulator).
+## The game
 
-The project file is generated with [XcodeGen](https://github.com/yonaskolb/XcodeGen) from [project.yml](project.yml). Adding files in Xcode works normally; if you prefer, edit `project.yml` and re-run `xcodegen generate`.
+Face up. Say the name out loud like you mean it. Tap — the name slides up from the bottom of the card. Swipe right if you nailed it, left if you blanked. The next face is already peeking out from behind, waiting in the wings.
 
-## Roadmap ideas
+But here's the part I actually care about:
 
-- Type-the-name quiz mode as a harder alternative to reveal-and-swipe
-- Free iCloud sync via CloudKit (still zero-cost with a developer account)
-- iPad layout
-- App Store release: replace the placeholder icon, add privacy nutrition labels (easy: no data collected)
+- **You start with three faces.** Just three. Nobody learns a whole cohort at once, and the app doesn't pretend you can.
+- **You control the pace.** When you're feeling dangerous, tap **Add Face**. The new person introduces themselves — name showing — and then gets quizzed a few cards later, while the name is still warm.
+- **It notices what you don't know.** A new face comes around *three times a pass*. Keep nailing it and it earns its way down to once. Blank on someone you "knew" and their frequency quietly climbs right back up. You never manage any of this. The deck just… pays attention.
+
+The screen always shows the score of the campaign: *12 of 23 in rotation, 11 waiting in the lobby.*
+
+## The little things
+
+- Sometimes the scan catches a sliver of someone's printed name at the bottom of their photo. A spoiler! There's a crop button **right on the flashcard** — trim it out and the view springs into your crop like the Photos app. Originals are kept, so no crop is ever forever.
+- Haptics everywhere: a soft tick when the name reveals, a happy buzz when you're right, a shameful one when you're wrong.
+- Miss a face and it comes back a few cards later. It knows. It always knows.
+
+## The boring part (it isn't)
+
+SwiftUI + SwiftData, iOS 18+, iPhone. Vision + PDFKit do the extraction **on-device** — no servers, no accounts, no subscription, no "we value your privacy" theater. The students' photos never leave the phone. Cost to run: **$0.00, forever.**
+
+## Run it
+
+1. Clone it, open `NamesAndFaces.xcodeproj` in Xcode 16+.
+2. Pick your team under **Signing & Capabilities**.
+3. Run it **on a real iPhone** (the simulator can't run the face detector — it gets stage fright).
+4. Import any PDF of portraits with names under them. Go learn your people.
+
+*(The project file is generated with [XcodeGen](https://github.com/yonaskolb/XcodeGen) from `project.yml`, if you're the regenerating type.)*
+
+---
+
+Built at the Neighborhood Playhouse, in conversation with Claude — I described the app I wished existed, we argued a little about spaced repetition, and this came out the other side.
+
+Because the best thing you can do with someone's face is know their name.
