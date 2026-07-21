@@ -43,6 +43,8 @@ SwiftUI + SwiftData, iOS 18+, iPhone. Vision + PDFKit do the extraction **on-dev
 3. Run it **on a real iPhone** (the simulator can't run the face detector — it gets stage fright).
 4. Import any PDF of portraits with names under them. Go learn your people.
 
+No PDF handy? The app deals you a starter deck on first launch: **US Presidents** — 45 faces, Washington through Biden, official portraits and all. Try the game before your first cohort arrives, or finally learn which one is Chester A. Arthur.
+
 *(The project file is generated with [XcodeGen](https://github.com/yonaskolb/XcodeGen) from `project.yml`, if you're the regenerating type.)*
 
 ---

@@ -15,6 +15,7 @@
 		550B042D536AB360F61A5987 /* StudyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AC9E81CC2657830D1EC22F /* StudyView.swift */; };
 		AC924EA3279C7419D81E0882 /* ImportReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5674B0365241ACEBF76B7D7A /* ImportReviewView.swift */; };
 		B35E016351978C7016A67E3B /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D6FD11E16FB2CBB300DA2F /* Models.swift */; };
+		D3A1F00A2C4E9B71E5D06421 /* PresidentsDemoDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A1F00B2C4E9B71E5D06422 /* PresidentsDemoDeck.swift */; };
 		C073BC1551622780191BFF23 /* StudySession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9534BDFAA05C44E4125E07D /* StudySession.swift */; };
 		D61825280AAA4723DCFEA206 /* DeckDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C8A667759D85277A9C1D9C /* DeckDetailView.swift */; };
 		E3BF13B91F67BA449CBF9D41 /* PDFExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A60E240B21BB2F50D1F6E20 /* PDFExtractor.swift */; };
@@ -36,6 +37,7 @@
 		7CCB7626731A4A362F366AFE /* NamesAndFaces.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NamesAndFaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE2FC894D8E5770AEF3BA2BA /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 		B5AC9E81CC2657830D1EC22F /* StudyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyView.swift; sourceTree = "<group>"; };
+		D3A1F00B2C4E9B71E5D06422 /* PresidentsDemoDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresidentsDemoDeck.swift; sourceTree = "<group>"; };
 		E9534BDFAA05C44E4125E07D /* StudySession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudySession.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -45,6 +47,7 @@
 			children = (
 				55AF9469373BACDEF7F6147A /* Assets.xcassets */,
 				A1AC5CFE602BA6B8E8BBE49B /* App */,
+				D3A1F00C2C4E9B71E5D06423 /* DemoContent */,
 				81977F0BCAF5E3B4200E9738 /* Import */,
 				7F2BFD7930BC35F6D4F4EB5A /* Models */,
 				219C80902538C43165572141 /* Study */,
@@ -122,6 +125,14 @@
 				4D9D67F945FE70E392103C25 /* NamesAndFacesApp.swift */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		D3A1F00C2C4E9B71E5D06423 /* DemoContent */ = {
+			isa = PBXGroup;
+			children = (
+				D3A1F00B2C4E9B71E5D06422 /* PresidentsDemoDeck.swift */,
+			);
+			path = DemoContent;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -203,6 +214,7 @@
 				234A3722D2B5FEB89EFD626C /* NamesAndFacesApp.swift in Sources */,
 				E3BF13B91F67BA449CBF9D41 /* PDFExtractor.swift in Sources */,
 				1C9846095CBF5AFBC40B380A /* PersonEditView.swift in Sources */,
+				D3A1F00A2C4E9B71E5D06421 /* PresidentsDemoDeck.swift in Sources */,
 				C073BC1551622780191BFF23 /* StudySession.swift in Sources */,
 				550B042D536AB360F61A5987 /* StudyView.swift in Sources */,
 				3CE4A569062118E11A2A9900 /* UIImage+Resize.swift in Sources */,
