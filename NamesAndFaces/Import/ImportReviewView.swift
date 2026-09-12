@@ -30,6 +30,7 @@ struct ImportReviewView: View {
     @State private var phase: Phase = .extracting(page: 0, total: 0)
     @State private var candidates: [ExtractedCandidate] = []
     @State private var cropTarget: CropTarget?
+    @FocusState private var editingName: UUID?
 
     private var includedCount: Int {
         candidates.filter(\.include).count
@@ -60,10 +61,19 @@ struct ImportReviewView: View {
             }
             .safeAreaInset(edge: .bottom) {
                 if case .review = phase {
+                    // While a name is being edited this button sits directly above
+                    // the keyboard, where "Add 23 People" reads like it would file
+                    // everyone mid-edit. It finishes the edit instead.
                     Button {
-                        save()
+                        if editingName != nil {
+                            editingName = nil
+                        } else {
+                            save()
+                        }
                     } label: {
-                        Text("Add \(includedCount) \(includedCount == 1 ? "Person" : "People")")
+                        Text(editingName != nil
+                             ? "Done"
+                             : "Add \(includedCount) \(includedCount == 1 ? "Person" : "People")")
                             .font(.headline)
                             .monospacedDigit()
                             .contentTransition(.numericText())
@@ -71,7 +81,7 @@ struct ImportReviewView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .controlSize(.large)
-                    .disabled(includedCount == 0)
+                    .disabled(editingName == nil && includedCount == 0)
                     .padding()
                     .background(.bar)
                 }
@@ -121,7 +131,7 @@ struct ImportReviewView: View {
 
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 16) {
                 ForEach($candidates) { $candidate in
-                    CandidateCell(candidate: $candidate) {
+                    CandidateCell(candidate: $candidate, editingName: $editingName) {
                         if let index = candidates.firstIndex(where: { $0.id == candidate.id }) {
                             cropTarget = CropTarget(index: index)
                         }
@@ -171,6 +181,7 @@ struct ImportReviewView: View {
 
 private struct CandidateCell: View {
     @Binding var candidate: ExtractedCandidate
+    var editingName: FocusState<UUID?>.Binding
     let onCrop: () -> Void
 
     var body: some View {
@@ -203,9 +214,24 @@ private struct CandidateCell: View {
                     .padding(6)
                 }
 
-            TextField("Name", text: $candidate.name)
+            // Extraction can pull in a neighbour's name or a job title, so the
+            // whole string has to be readable — truncated to one line is exactly
+            // where a wrong name hides. Wraps at rest and while editing.
+            TextField("Name", text: $candidate.name, axis: .vertical)
                 .textFieldStyle(.roundedBorder)
+                .lineLimit(1...4)
                 .autocorrectionDisabled()
+                .focused(editingName, equals: candidate.id)
+                .submitLabel(.done)
+                .onChange(of: candidate.name) { _, newValue in
+                    // A vertical-axis field turns Return into a newline; keep
+                    // Return meaning "I'm finished with this name".
+                    guard newValue.contains("\n") else { return }
+                    candidate.name = newValue
+                        .replacingOccurrences(of: "\n", with: " ")
+                        .trimmingCharacters(in: .whitespacesAndNewlines)
+                    editingName.wrappedValue = nil
+                }
         }
         .opacity(candidate.include ? 1 : 0.35)
     }
