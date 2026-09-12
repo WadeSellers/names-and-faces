@@ -57,6 +57,14 @@ struct PersonEditView: View {
                             .frame(width: 190, height: 250)
                             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                             .shadow(color: .black.opacity(0.12), radius: 10, y: 5)
+                            // Tapping the photo does what the Crop button does.
+                            .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .onTapGesture {
+                                guard originalData != nil else { return }
+                                showingCrop = true
+                            }
+                            .accessibilityAddTraits(originalData != nil ? .isButton : [])
+                            .accessibilityHint(originalData != nil ? "Crop this photo" : "")
 
                             HStack(spacing: 10) {
                                 Menu {

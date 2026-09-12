@@ -192,6 +192,12 @@ private struct CandidateCell: View {
                 .frame(minWidth: 0, maxWidth: .infinity)
                 .aspectRatio(3 / 4, contentMode: .fit)
                 .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                // The crop button is small and easy to miss; the photo itself is
+                // the obvious thing to tap when a name has crept into it.
+                .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .onTapGesture(perform: onCrop)
+                .accessibilityAddTraits(.isButton)
+                .accessibilityHint("Crop this photo")
                 .overlay(alignment: .topTrailing) {
                     Button {
                         withAnimation(.snappy) { candidate.include.toggle() }
