@@ -2,7 +2,7 @@ import SwiftUI
 import SwiftData
 import UniformTypeIdentifiers
 
-/// One cohort: the grid of faces, plus import, add, and study entry points.
+/// One group: the grid of faces, plus import, add, and study entry points.
 struct DeckDetailView: View {
     @Bindable var deck: Deck
 
@@ -32,11 +32,11 @@ struct DeckDetailView: View {
                 ContentUnavailableView {
                     Label("No People Yet", systemImage: "doc.viewfinder")
                 } description: {
-                    Text("Import the cohort PDF and every face and name will be pulled out automatically.")
+                    Text("Import a PDF of headshots and every face and name is pulled out automatically. Or add people one at a time.")
                 } actions: {
-                    Button("Import PDF") { showingFileImporter = true }
+                    Button("Import a PDF") { showingFileImporter = true }
                         .buttonStyle(.borderedProminent)
-                    Button("Add Person Manually") { showingAddPerson = true }
+                    Button("Add Someone Manually") { showingAddPerson = true }
                 }
             } else {
                 ScrollView {
@@ -65,7 +65,7 @@ struct DeckDetailView: View {
                     Button {
                         showingFileImporter = true
                     } label: {
-                        Label("Import PDF", systemImage: "doc.viewfinder")
+                        Label("Import a PDF", systemImage: "doc.viewfinder")
                     }
                     Button {
                         showingAddPerson = true

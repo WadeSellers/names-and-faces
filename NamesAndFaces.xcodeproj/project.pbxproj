@@ -7,38 +7,65 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		06BC21BAA5FFBAEAF386EC06 /* E-name-plus-role.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 5B2486800619ECC932C19514 /* E-name-plus-role.pdf */; };
+		12AC966399FBA15F036E2F35 /* PDFExtractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46984D1BF9CF9D4BD05D313A /* PDFExtractorTests.swift */; };
 		1C9846095CBF5AFBC40B380A /* PersonEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5561D933F2D955635D3297F0 /* PersonEditView.swift */; };
 		234A3722D2B5FEB89EFD626C /* NamesAndFacesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9D67F945FE70E392103C25 /* NamesAndFacesApp.swift */; };
+		240C6F22303F14BE554C802F /* A-grid-name-below.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 0DA564541138B682E103A7BD /* A-grid-name-below.pdf */; };
 		2E92C2F20906601146B2ED33 /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A4E1008A45A1C0AE83C339 /* CameraPicker.swift */; };
 		360BC25A9C1D094FD2E8D43E /* CropEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C283452DF3CEA0DDAECA5E4 /* CropEditorView.swift */; };
 		3CE4A569062118E11A2A9900 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2FC894D8E5770AEF3BA2BA /* UIImage+Resize.swift */; };
+		48E6935DC8C4F5B3DA8C28F4 /* B-name-beside.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D626777C8E0F42F3CE552F84 /* B-name-beside.pdf */; };
 		550B042D536AB360F61A5987 /* StudyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AC9E81CC2657830D1EC22F /* StudyView.swift */; };
+		6C747C31FE9A059966400174 /* D-dense-yearbook.pdf in Resources */ = {isa = PBXBuildFile; fileRef = EA8E2F40C089B6141994709C /* D-dense-yearbook.pdf */; };
+		7CF56D8F87B9E32AD291B217 /* PresidentsDemoDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38604C203D527C60224F185 /* PresidentsDemoDeck.swift */; };
+		90DD2FCA37B10B136C2B5517 /* C-name-above.pdf in Resources */ = {isa = PBXBuildFile; fileRef = F4F7C2D0B5513195EA166ECE /* C-name-above.pdf */; };
 		AC924EA3279C7419D81E0882 /* ImportReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5674B0365241ACEBF76B7D7A /* ImportReviewView.swift */; };
 		B35E016351978C7016A67E3B /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D6FD11E16FB2CBB300DA2F /* Models.swift */; };
-		D3A1F00A2C4E9B71E5D06421 /* PresidentsDemoDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A1F00B2C4E9B71E5D06422 /* PresidentsDemoDeck.swift */; };
 		C073BC1551622780191BFF23 /* StudySession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9534BDFAA05C44E4125E07D /* StudySession.swift */; };
+		C4A7A02EF86EAEF00A8B45E2 /* F-two-line-name.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 56E39E6385C7C252C7A28BC1 /* F-two-line-name.pdf */; };
 		D61825280AAA4723DCFEA206 /* DeckDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C8A667759D85277A9C1D9C /* DeckDetailView.swift */; };
 		E3BF13B91F67BA449CBF9D41 /* PDFExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A60E240B21BB2F50D1F6E20 /* PDFExtractor.swift */; };
+		EBDC683968A7BEB0CC15A9BB /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = BF57D4438E6155D7EB1FF6E2 /* PrivacyInfo.xcprivacy */; };
 		F1D890D9B95B8D209CAA902B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55AF9469373BACDEF7F6147A /* Assets.xcassets */; };
 		FCB3815BB80389595D3E1D98 /* DeckListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BBE36CE2B6F0C84723BD0A /* DeckListView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		2A95445BBEE59E3B4DB0AC61 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3E45E9F753805D582D5F0AD6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D0075EE3CE0DB91AE3D8C005;
+			remoteInfo = NamesAndFaces;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		0DA564541138B682E103A7BD /* A-grid-name-below.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "A-grid-name-below.pdf"; sourceTree = "<group>"; };
 		16BBE36CE2B6F0C84723BD0A /* DeckListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckListView.swift; sourceTree = "<group>"; };
 		20A4E1008A45A1C0AE83C339 /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
 		21D6FD11E16FB2CBB300DA2F /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		3A60E240B21BB2F50D1F6E20 /* PDFExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFExtractor.swift; sourceTree = "<group>"; };
+		406A930E2604569C72BAA266 /* NamesAndFacesTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = NamesAndFacesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		46984D1BF9CF9D4BD05D313A /* PDFExtractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFExtractorTests.swift; sourceTree = "<group>"; };
 		4D9D67F945FE70E392103C25 /* NamesAndFacesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesAndFacesApp.swift; sourceTree = "<group>"; };
 		50C8A667759D85277A9C1D9C /* DeckDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckDetailView.swift; sourceTree = "<group>"; };
 		5561D933F2D955635D3297F0 /* PersonEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonEditView.swift; sourceTree = "<group>"; };
 		55AF9469373BACDEF7F6147A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5674B0365241ACEBF76B7D7A /* ImportReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportReviewView.swift; sourceTree = "<group>"; };
+		56E39E6385C7C252C7A28BC1 /* F-two-line-name.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "F-two-line-name.pdf"; sourceTree = "<group>"; };
+		5B2486800619ECC932C19514 /* E-name-plus-role.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "E-name-plus-role.pdf"; sourceTree = "<group>"; };
 		6C283452DF3CEA0DDAECA5E4 /* CropEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropEditorView.swift; sourceTree = "<group>"; };
-		7CCB7626731A4A362F366AFE /* NamesAndFaces.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NamesAndFaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7CCB7626731A4A362F366AFE /* NamesAndFaces.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NamesAndFaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE2FC894D8E5770AEF3BA2BA /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
 		B5AC9E81CC2657830D1EC22F /* StudyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyView.swift; sourceTree = "<group>"; };
-		D3A1F00B2C4E9B71E5D06422 /* PresidentsDemoDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresidentsDemoDeck.swift; sourceTree = "<group>"; };
+		BF57D4438E6155D7EB1FF6E2 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		D626777C8E0F42F3CE552F84 /* B-name-beside.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "B-name-beside.pdf"; sourceTree = "<group>"; };
 		E9534BDFAA05C44E4125E07D /* StudySession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudySession.swift; sourceTree = "<group>"; };
+		EA8E2F40C089B6141994709C /* D-dense-yearbook.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "D-dense-yearbook.pdf"; sourceTree = "<group>"; };
+		F38604C203D527C60224F185 /* PresidentsDemoDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresidentsDemoDeck.swift; sourceTree = "<group>"; };
+		F4F7C2D0B5513195EA166ECE /* C-name-above.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "C-name-above.pdf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -46,8 +73,9 @@
 			isa = PBXGroup;
 			children = (
 				55AF9469373BACDEF7F6147A /* Assets.xcassets */,
+				BF57D4438E6155D7EB1FF6E2 /* PrivacyInfo.xcprivacy */,
 				A1AC5CFE602BA6B8E8BBE49B /* App */,
-				D3A1F00C2C4E9B71E5D06423 /* DemoContent */,
+				6BB19ADC440D8A421886524E /* DemoContent */,
 				81977F0BCAF5E3B4200E9738 /* Import */,
 				7F2BFD7930BC35F6D4F4EB5A /* Models */,
 				219C80902538C43165572141 /* Study */,
@@ -61,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				0F81C83D8767510C893ABB54 /* NamesAndFaces */,
+				B6FD4E7FBC7354E84C06EB2E /* Tests */,
 				1A607D40AA9E031D22723BB9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -69,6 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				7CCB7626731A4A362F366AFE /* NamesAndFaces.app */,
+				406A930E2604569C72BAA266 /* NamesAndFacesTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,6 +118,27 @@
 				AE2FC894D8E5770AEF3BA2BA /* UIImage+Resize.swift */,
 			);
 			path = Support;
+			sourceTree = "<group>";
+		};
+		3E62C9CE1DABCC4B26359C8B /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				0DA564541138B682E103A7BD /* A-grid-name-below.pdf */,
+				D626777C8E0F42F3CE552F84 /* B-name-beside.pdf */,
+				F4F7C2D0B5513195EA166ECE /* C-name-above.pdf */,
+				EA8E2F40C089B6141994709C /* D-dense-yearbook.pdf */,
+				5B2486800619ECC932C19514 /* E-name-plus-role.pdf */,
+				56E39E6385C7C252C7A28BC1 /* F-two-line-name.pdf */,
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
+		6BB19ADC440D8A421886524E /* DemoContent */ = {
+			isa = PBXGroup;
+			children = (
+				F38604C203D527C60224F185 /* PresidentsDemoDeck.swift */,
+			);
+			path = DemoContent;
 			sourceTree = "<group>";
 		};
 		7F2BFD7930BC35F6D4F4EB5A /* Models */ = {
@@ -127,17 +178,37 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		D3A1F00C2C4E9B71E5D06423 /* DemoContent */ = {
+		B6FD4E7FBC7354E84C06EB2E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				D3A1F00B2C4E9B71E5D06422 /* PresidentsDemoDeck.swift */,
+				46984D1BF9CF9D4BD05D313A /* PDFExtractorTests.swift */,
+				3E62C9CE1DABCC4B26359C8B /* Fixtures */,
 			);
-			path = DemoContent;
+			path = Tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		43DBADB4FC4FC08FF805C0B5 /* NamesAndFacesTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 709DD4DDDB2B7D2313C43874 /* Build configuration list for PBXNativeTarget "NamesAndFacesTests" */;
+			buildPhases = (
+				8D6020F5024EED949F30E64C /* Sources */,
+				7B0B5301E0CE088F105A8B78 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				883C6F9E9DDE4601794EDBE2 /* PBXTargetDependency */,
+			);
+			name = NamesAndFacesTests;
+			packageProductDependencies = (
+			);
+			productName = NamesAndFacesTests;
+			productReference = 406A930E2604569C72BAA266 /* NamesAndFacesTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		D0075EE3CE0DB91AE3D8C005 /* NamesAndFaces */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D23C86B60454510C72D7E011 /* Build configuration list for PBXNativeTarget "NamesAndFaces" */;
@@ -163,9 +234,10 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 2660;
+				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					D0075EE3CE0DB91AE3D8C005 = {
+						DevelopmentTeam = GV76VP4G8V;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -185,6 +257,7 @@
 			projectRoot = "";
 			targets = (
 				D0075EE3CE0DB91AE3D8C005 /* NamesAndFaces */,
+				43DBADB4FC4FC08FF805C0B5 /* NamesAndFacesTests */,
 			);
 		};
 /* End PBXProject section */
@@ -195,6 +268,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1D890D9B95B8D209CAA902B /* Assets.xcassets in Resources */,
+				EBDC683968A7BEB0CC15A9BB /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7B0B5301E0CE088F105A8B78 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				240C6F22303F14BE554C802F /* A-grid-name-below.pdf in Resources */,
+				48E6935DC8C4F5B3DA8C28F4 /* B-name-beside.pdf in Resources */,
+				90DD2FCA37B10B136C2B5517 /* C-name-above.pdf in Resources */,
+				6C747C31FE9A059966400174 /* D-dense-yearbook.pdf in Resources */,
+				06BC21BAA5FFBAEAF386EC06 /* E-name-plus-role.pdf in Resources */,
+				C4A7A02EF86EAEF00A8B45E2 /* F-two-line-name.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,16 +301,49 @@
 				234A3722D2B5FEB89EFD626C /* NamesAndFacesApp.swift in Sources */,
 				E3BF13B91F67BA449CBF9D41 /* PDFExtractor.swift in Sources */,
 				1C9846095CBF5AFBC40B380A /* PersonEditView.swift in Sources */,
-				D3A1F00A2C4E9B71E5D06421 /* PresidentsDemoDeck.swift in Sources */,
+				7CF56D8F87B9E32AD291B217 /* PresidentsDemoDeck.swift in Sources */,
 				C073BC1551622780191BFF23 /* StudySession.swift in Sources */,
 				550B042D536AB360F61A5987 /* StudyView.swift in Sources */,
 				3CE4A569062118E11A2A9900 /* UIImage+Resize.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8D6020F5024EED949F30E64C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				12AC966399FBA15F036E2F35 /* PDFExtractorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		883C6F9E9DDE4601794EDBE2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D0075EE3CE0DB91AE3D8C005 /* NamesAndFaces */;
+			targetProxy = 2A95445BBEE59E3B4DB0AC61 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		0EDA740F0727AC7D6B8C250B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wadesellers.NamesAndFacesTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NamesAndFaces.app/NamesAndFaces";
+			};
+			name = Release;
+		};
 		3999A4F664DAE5107AE9F06C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -231,9 +351,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = GV76VP4G8V;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Names & Faces";
+				INFOPLIST_KEY_CFBundleDisplayName = "Name That Face";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "The camera is used to take a photo of a person for their flashcard.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -283,10 +405,8 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = GV76VP4G8V;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -307,7 +427,6 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -349,10 +468,8 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = GV76VP4G8V;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -366,7 +483,6 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
@@ -380,9 +496,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = GV76VP4G8V;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Names & Faces";
+				INFOPLIST_KEY_CFBundleDisplayName = "Name That Face";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSCameraUsageDescription = "The camera is used to take a photo of a person for their flashcard.";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -397,9 +515,35 @@
 			};
 			name = Release;
 		};
+		FBC0AE16332FC3EE56E86A58 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.wadesellers.NamesAndFacesTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NamesAndFaces.app/NamesAndFaces";
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		709DD4DDDB2B7D2313C43874 /* Build configuration list for PBXNativeTarget "NamesAndFacesTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FBC0AE16332FC3EE56E86A58 /* Debug */,
+				0EDA740F0727AC7D6B8C250B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		991F5CCF9B2A46741115A3AE /* Build configuration list for PBXProject "NamesAndFaces" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

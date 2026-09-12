@@ -17,21 +17,38 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.wadesellers.NamesAndFaces
         GENERATE_INFOPLIST_FILE: YES
-        CURRENT_PROJECT_VERSION: 1
+        CURRENT_PROJECT_VERSION: 2
         MARKETING_VERSION: "1.0"
         TARGETED_DEVICE_FAMILY: "1"
         CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: GV76VP4G8V
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
-        INFOPLIST_KEY_CFBundleDisplayName: "Names & Faces"
+        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: "NO"
+        INFOPLIST_KEY_CFBundleDisplayName: "Name That Face"
         INFOPLIST_KEY_NSCameraUsageDescription: "The camera is used to take a photo of a person for their flashcard."
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait"
+  NamesAndFacesTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - Tests
+    dependencies:
+      - target: NamesAndFaces
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
 schemes:
   NamesAndFaces:
     build:
       targets:
         NamesAndFaces: all
+        NamesAndFacesTests: [test]
+    test:
+      config: Debug
+      targets:
+        - NamesAndFacesTests
     run:
       config: Debug
     archive:

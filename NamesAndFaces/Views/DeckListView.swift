@@ -1,59 +1,105 @@
 import SwiftUI
 import SwiftData
+import UniformTypeIdentifiers
 
-/// Home screen: one deck per cohort, with fanned face previews and a
-/// mastery ring per deck.
+/// Home screen: one deck per group of people, with fanned face previews and a
+/// mastery ring per deck. The PDF import lives here too — it's the whole point
+/// of the app, so it shouldn't be buried inside a deck you have to make first.
 struct DeckListView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \Deck.createdAt, order: .reverse) private var decks: [Deck]
 
     @State private var showingNewDeckAlert = false
     @State private var newDeckName = ""
+    @State private var showingFileImporter = false
+    @State private var importRequest: ImportRequest?
+    @State private var importingInto: Deck?
+    @State private var importError: String?
+
+    private static let pitch = "Import a PDF of headshots. Every face is found, the name printed with it is read, and you get a deck of flashcards — no typing, no cropping."
 
     var body: some View {
         NavigationStack {
             Group {
                 if decks.isEmpty {
                     ContentUnavailableView {
-                        Label("No Cohorts Yet", systemImage: "person.crop.rectangle.stack")
+                        Label("No Groups Yet", systemImage: "doc.viewfinder")
                     } description: {
-                        Text("Create a deck for your first cohort, then import their PDF to build flashcards.")
+                        Text(Self.pitch)
                     } actions: {
-                        Button("New Deck") { promptForNewDeck() }
+                        Button("Import a PDF") { showingFileImporter = true }
                             .buttonStyle(.borderedProminent)
+                        Button("Start an Empty Group") { promptForNewDeck() }
                     }
                 } else {
                     List {
-                        ForEach(decks) { deck in
-                            NavigationLink {
-                                DeckDetailView(deck: deck)
-                            } label: {
-                                DeckRow(deck: deck)
+                        Section {
+                            ForEach(decks) { deck in
+                                NavigationLink {
+                                    DeckDetailView(deck: deck)
+                                } label: {
+                                    DeckRow(deck: deck)
+                                }
                             }
+                            .onDelete(perform: deleteDecks)
+                        } footer: {
+                            Text(Self.pitch)
+                                .padding(.top, 6)
                         }
-                        .onDelete(perform: deleteDecks)
                     }
                 }
             }
-            .navigationTitle("Names & Faces")
+            .navigationTitle("Name That Face")
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        promptForNewDeck()
+                    Menu {
+                        Button {
+                            showingFileImporter = true
+                        } label: {
+                            Label("Import a PDF", systemImage: "doc.viewfinder")
+                        }
+                        Button {
+                            promptForNewDeck()
+                        } label: {
+                            Label("Start an Empty Group", systemImage: "folder.badge.plus")
+                        }
                     } label: {
-                        Label("New Deck", systemImage: "plus")
+                        Label("Add", systemImage: "plus")
                     }
                 }
             }
-            .alert("New Deck", isPresented: $showingNewDeckAlert) {
-                TextField("Cohort name", text: $newDeckName)
+            .alert("New Group", isPresented: $showingNewDeckAlert) {
+                TextField("Group name", text: $newDeckName)
                 Button("Create") { createDeck() }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("Name this cohort — for example \u{201C}Fall 2026 First Years\u{201D}.")
+                Text("Name this group — your new class, cast, team, or cohort.")
+            }
+            .fileImporter(isPresented: $showingFileImporter, allowedContentTypes: [.pdf]) { result in
+                switch result {
+                case .success(let url):
+                    startImport(from: url)
+                case .failure(let error):
+                    importError = error.localizedDescription
+                }
+            }
+            .alert("Import Failed", isPresented: .init(
+                get: { importError != nil },
+                set: { if !$0 { importError = nil } }
+            )) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(importError ?? "")
+            }
+            .sheet(item: $importRequest, onDismiss: discardEmptyImportDeck) { request in
+                if let deck = importingInto {
+                    ImportReviewView(deck: deck, url: request.url)
+                }
             }
         }
     }
+
+    // MARK: - Actions
 
     private func promptForNewDeck() {
         newDeckName = ""
@@ -66,6 +112,31 @@ struct DeckListView: View {
         withAnimation {
             context.insert(Deck(name: name))
         }
+    }
+
+    /// Importing from the home screen makes the group for you, named after the
+    /// file, so the first thing a newcomer does is the thing the app is for.
+    private func startImport(from url: URL) {
+        let deck = Deck(name: Self.groupName(from: url))
+        context.insert(deck)
+        importingInto = deck
+        importRequest = ImportRequest(url: url)
+    }
+
+    /// Backing out of the review sheet shouldn't leave an empty group behind.
+    private func discardEmptyImportDeck() {
+        if let deck = importingInto, deck.people.isEmpty {
+            context.delete(deck)
+        }
+        importingInto = nil
+    }
+
+    static func groupName(from url: URL) -> String {
+        let raw = url.deletingPathExtension().lastPathComponent
+            .replacingOccurrences(of: "_", with: " ")
+            .replacingOccurrences(of: "-", with: " ")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return raw.isEmpty ? "New Group" : raw
     }
 
     private func deleteDecks(at offsets: IndexSet) {
@@ -88,13 +159,29 @@ private struct DeckRow: View {
         deck.people.filter { $0.introducedAt != nil }.count
     }
 
+    /// The bundled deck, still untouched — label it so nobody mistakes it for
+    /// something they added.
+    private var isUntouchedSample: Bool {
+        deck.name == PresidentsDemoDeck.deckName && inRotationCount == 0
+    }
+
     var body: some View {
         HStack(spacing: 14) {
             facesFan
 
             VStack(alignment: .leading, spacing: 3) {
-                Text(deck.name)
-                    .font(.headline)
+                HStack(spacing: 6) {
+                    Text(deck.name)
+                        .font(.headline)
+                    if isUntouchedSample {
+                        Text("TRY IT")
+                            .font(.system(size: 10, weight: .bold, design: .rounded))
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(Color.accentColor.opacity(0.15), in: Capsule())
+                            .foregroundStyle(Color.accentColor)
+                    }
+                }
                 Text(subtitle)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -111,6 +198,9 @@ private struct DeckRow: View {
 
     private var subtitle: String {
         guard !deck.people.isEmpty else { return "Empty — import a PDF" }
+        if isUntouchedSample {
+            return "\(deck.people.count) faces to practice on"
+        }
         var parts = ["\(deck.people.count) \(deck.people.count == 1 ? "person" : "people")"]
         if inRotationCount > 0 {
             parts.append("\(inRotationCount) in rotation")
