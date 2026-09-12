@@ -151,6 +151,8 @@ struct DeckListView: View {
 private struct DeckRow: View {
     let deck: Deck
 
+    @Environment(\.dynamicTypeSize) private var typeSize
+
     private var previewPeople: [Person] {
         Array(deck.people.sorted { $0.createdAt < $1.createdAt }.prefix(3))
     }
@@ -166,13 +168,20 @@ private struct DeckRow: View {
     }
 
     var body: some View {
-        HStack(spacing: 14) {
+        // A deck name set in accessibility type has no room beside the faces and
+        // the ring, so the row becomes a column.
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
+            : AnyLayout(HStackLayout(spacing: 14))
+
+        return layout {
             facesFan
 
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 6) {
                     Text(deck.name)
                         .font(.headline)
+                        .lineLimit(2)
                     if isUntouchedSample {
                         Text("TRY IT")
                             .font(.system(size: 10, weight: .bold, design: .rounded))
@@ -185,9 +194,13 @@ private struct DeckRow: View {
                 Text(subtitle)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
+                    .lineLimit(2)
             }
+            .fixedSize(horizontal: false, vertical: true)
 
-            Spacer(minLength: 8)
+            if !typeSize.isAccessibilitySize {
+                Spacer(minLength: 8)
+            }
 
             if !deck.people.isEmpty {
                 MasteryRing(mastery: deck.mastery)
@@ -240,6 +253,8 @@ private struct DeckRow: View {
 private struct MasteryRing: View {
     let mastery: Double
 
+    @ScaledMetric(relativeTo: .caption) private var diameter: CGFloat = 42
+
     var body: some View {
         ZStack {
             Circle()
@@ -249,9 +264,10 @@ private struct MasteryRing: View {
                 .stroke(Color.accentColor, style: StrokeStyle(lineWidth: 4, lineCap: .round))
                 .rotationEffect(.degrees(-90))
             Text("\(Int(mastery * 100))")
-                .font(.system(size: 12, weight: .bold, design: .rounded))
+                .font(.system(.caption, design: .rounded, weight: .bold))
                 .monospacedDigit()
+                .minimumScaleFactor(0.6)
         }
-        .frame(width: 42, height: 42)
+        .frame(width: min(diameter, 68), height: min(diameter, 68))
     }
 }

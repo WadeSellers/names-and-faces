@@ -6,6 +6,7 @@ import SwiftData
 /// "missed it." The rotation grows only when the user taps Add Face.
 struct StudyView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     @State private var session: StudySession
     @State private var revealed: Bool
@@ -36,13 +37,20 @@ struct StudyView: View {
                 backdrop
 
                 if session.current != nil {
-                    VStack(spacing: 18) {
-                        Spacer(minLength: 0)
-                        cardStack
-                        hintText
-                        rotationStatus
-                        answerButtons
-                        Spacer(minLength: 8)
+                    // At accessibility text sizes the card plus its chrome is
+                    // taller than the screen, so the column scrolls rather than
+                    // overlapping itself or squeezing the face down to a stamp.
+                    if typeSize.isAccessibilitySize {
+                        ScrollView {
+                            studyColumn
+                                .padding(.vertical, 12)
+                        }
+                    } else {
+                        VStack(spacing: 18) {
+                            Spacer(minLength: 0)
+                            studyColumn
+                            Spacer(minLength: 8)
+                        }
                     }
                 } else {
                     ContentUnavailableView("Nothing to study", systemImage: "person.crop.rectangle.stack")
@@ -77,6 +85,15 @@ struct StudyView: View {
                         : (croppedImage.jpegData(compressionQuality: 0.85) ?? person.imageData)
                 }
             }
+        }
+    }
+
+    private var studyColumn: some View {
+        VStack(spacing: 18) {
+            cardStack
+            hintText
+            rotationStatus
+            answerButtons
         }
     }
 
@@ -154,12 +171,20 @@ struct StudyView: View {
         .font(.footnote)
         .foregroundStyle(.secondary)
         .multilineTextAlignment(.center)
+        .lineLimit(3)
+        .fixedSize(horizontal: false, vertical: true)
         .frame(minHeight: 34)
         .padding(.horizontal, 32)
     }
 
     private var rotationStatus: some View {
-        HStack(spacing: 12) {
+        // At accessibility text sizes a row of label + button squeezes both into
+        // ellipses, so they stack instead.
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 10))
+            : AnyLayout(HStackLayout(spacing: 12))
+
+        return layout {
             VStack(alignment: .leading, spacing: 2) {
                 Text("\(session.inRotationCount) of \(session.totalPeople) in rotation")
                     .font(.subheadline.bold())
@@ -173,8 +198,8 @@ struct StudyView: View {
                     .monospacedDigit()
                     .contentTransition(.numericText())
             }
-
-            Spacer()
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
 
             Button {
                 withAnimation(.spring(duration: 0.4)) {
@@ -185,6 +210,8 @@ struct StudyView: View {
             } label: {
                 Label("Add Face", systemImage: "person.badge.plus")
                     .font(.subheadline.bold())
+                    .lineLimit(1)
+                    .frame(maxWidth: typeSize.isAccessibilitySize ? .infinity : nil)
             }
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.capsule)
