@@ -15,8 +15,10 @@
 		2E92C2F20906601146B2ED33 /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A4E1008A45A1C0AE83C339 /* CameraPicker.swift */; };
 		360BC25A9C1D094FD2E8D43E /* CropEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C283452DF3CEA0DDAECA5E4 /* CropEditorView.swift */; };
 		3CE4A569062118E11A2A9900 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2FC894D8E5770AEF3BA2BA /* UIImage+Resize.swift */; };
+		48191B63251DBD29737280E4 /* DeckFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E88E9330F5CB313DBDAC9E5 /* DeckFileTests.swift */; };
 		48E6935DC8C4F5B3DA8C28F4 /* B-name-beside.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D626777C8E0F42F3CE552F84 /* B-name-beside.pdf */; };
 		550B042D536AB360F61A5987 /* StudyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AC9E81CC2657830D1EC22F /* StudyView.swift */; };
+		657CF323C52597EFE0A147D4 /* DeckImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B0E70F3D33D0158F0CD2B5 /* DeckImportView.swift */; };
 		6C747C31FE9A059966400174 /* D-dense-yearbook.pdf in Resources */ = {isa = PBXBuildFile; fileRef = EA8E2F40C089B6141994709C /* D-dense-yearbook.pdf */; };
 		7CF56D8F87B9E32AD291B217 /* PresidentsDemoDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38604C203D527C60224F185 /* PresidentsDemoDeck.swift */; };
 		90DD2FCA37B10B136C2B5517 /* C-name-above.pdf in Resources */ = {isa = PBXBuildFile; fileRef = F4F7C2D0B5513195EA166ECE /* C-name-above.pdf */; };
@@ -24,6 +26,8 @@
 		B35E016351978C7016A67E3B /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D6FD11E16FB2CBB300DA2F /* Models.swift */; };
 		C073BC1551622780191BFF23 /* StudySession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9534BDFAA05C44E4125E07D /* StudySession.swift */; };
 		C4A7A02EF86EAEF00A8B45E2 /* F-two-line-name.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 56E39E6385C7C252C7A28BC1 /* F-two-line-name.pdf */; };
+		C72E172604292A98C39D1460 /* DeckFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60399425FDC5FFD32F13C0E7 /* DeckFile.swift */; };
+		D0C89B7F7C763021F1111224 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B468CDF1E81AEB8E2EC1EB05 /* ShareSheet.swift */; };
 		D61825280AAA4723DCFEA206 /* DeckDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C8A667759D85277A9C1D9C /* DeckDetailView.swift */; };
 		E3BF13B91F67BA449CBF9D41 /* PDFExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A60E240B21BB2F50D1F6E20 /* PDFExtractor.swift */; };
 		EBDC683968A7BEB0CC15A9BB /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = BF57D4438E6155D7EB1FF6E2 /* PrivacyInfo.xcprivacy */; };
@@ -47,6 +51,7 @@
 		20A4E1008A45A1C0AE83C339 /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
 		21D6FD11E16FB2CBB300DA2F /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		3A60E240B21BB2F50D1F6E20 /* PDFExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFExtractor.swift; sourceTree = "<group>"; };
+		3E88E9330F5CB313DBDAC9E5 /* DeckFileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckFileTests.swift; sourceTree = "<group>"; };
 		406A930E2604569C72BAA266 /* NamesAndFacesTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = NamesAndFacesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		46984D1BF9CF9D4BD05D313A /* PDFExtractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFExtractorTests.swift; sourceTree = "<group>"; };
 		4D9D67F945FE70E392103C25 /* NamesAndFacesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesAndFacesApp.swift; sourceTree = "<group>"; };
@@ -56,9 +61,13 @@
 		5674B0365241ACEBF76B7D7A /* ImportReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportReviewView.swift; sourceTree = "<group>"; };
 		56E39E6385C7C252C7A28BC1 /* F-two-line-name.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "F-two-line-name.pdf"; sourceTree = "<group>"; };
 		5B2486800619ECC932C19514 /* E-name-plus-role.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "E-name-plus-role.pdf"; sourceTree = "<group>"; };
+		60399425FDC5FFD32F13C0E7 /* DeckFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckFile.swift; sourceTree = "<group>"; };
+		65B0E70F3D33D0158F0CD2B5 /* DeckImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckImportView.swift; sourceTree = "<group>"; };
 		6C283452DF3CEA0DDAECA5E4 /* CropEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropEditorView.swift; sourceTree = "<group>"; };
 		7CCB7626731A4A362F366AFE /* NamesAndFaces.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NamesAndFaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8382721DB6A4B8FE4CE0CAC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AE2FC894D8E5770AEF3BA2BA /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
+		B468CDF1E81AEB8E2EC1EB05 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
 		B5AC9E81CC2657830D1EC22F /* StudyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyView.swift; sourceTree = "<group>"; };
 		BF57D4438E6155D7EB1FF6E2 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		D626777C8E0F42F3CE552F84 /* B-name-beside.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "B-name-beside.pdf"; sourceTree = "<group>"; };
@@ -73,11 +82,13 @@
 			isa = PBXGroup;
 			children = (
 				55AF9469373BACDEF7F6147A /* Assets.xcassets */,
+				8382721DB6A4B8FE4CE0CAC0 /* Info.plist */,
 				BF57D4438E6155D7EB1FF6E2 /* PrivacyInfo.xcprivacy */,
 				A1AC5CFE602BA6B8E8BBE49B /* App */,
 				6BB19ADC440D8A421886524E /* DemoContent */,
 				81977F0BCAF5E3B4200E9738 /* Import */,
 				7F2BFD7930BC35F6D4F4EB5A /* Models */,
+				FB4222EA0194FAF638B3E8E5 /* Sharing */,
 				219C80902538C43165572141 /* Study */,
 				3D575B60FBC5946483E93DAE /* Support */,
 				82FA33CEFD24171EC88970DD /* Views */,
@@ -181,10 +192,21 @@
 		B6FD4E7FBC7354E84C06EB2E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				3E88E9330F5CB313DBDAC9E5 /* DeckFileTests.swift */,
 				46984D1BF9CF9D4BD05D313A /* PDFExtractorTests.swift */,
 				3E62C9CE1DABCC4B26359C8B /* Fixtures */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		FB4222EA0194FAF638B3E8E5 /* Sharing */ = {
+			isa = PBXGroup;
+			children = (
+				60399425FDC5FFD32F13C0E7 /* DeckFile.swift */,
+				65B0E70F3D33D0158F0CD2B5 /* DeckImportView.swift */,
+				B468CDF1E81AEB8E2EC1EB05 /* ShareSheet.swift */,
+			);
+			path = Sharing;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -295,6 +317,8 @@
 				2E92C2F20906601146B2ED33 /* CameraPicker.swift in Sources */,
 				360BC25A9C1D094FD2E8D43E /* CropEditorView.swift in Sources */,
 				D61825280AAA4723DCFEA206 /* DeckDetailView.swift in Sources */,
+				C72E172604292A98C39D1460 /* DeckFile.swift in Sources */,
+				657CF323C52597EFE0A147D4 /* DeckImportView.swift in Sources */,
 				FCB3815BB80389595D3E1D98 /* DeckListView.swift in Sources */,
 				AC924EA3279C7419D81E0882 /* ImportReviewView.swift in Sources */,
 				B35E016351978C7016A67E3B /* Models.swift in Sources */,
@@ -302,6 +326,7 @@
 				E3BF13B91F67BA449CBF9D41 /* PDFExtractor.swift in Sources */,
 				1C9846095CBF5AFBC40B380A /* PersonEditView.swift in Sources */,
 				7CF56D8F87B9E32AD291B217 /* PresidentsDemoDeck.swift in Sources */,
+				D0C89B7F7C763021F1111224 /* ShareSheet.swift in Sources */,
 				C073BC1551622780191BFF23 /* StudySession.swift in Sources */,
 				550B042D536AB360F61A5987 /* StudyView.swift in Sources */,
 				3CE4A569062118E11A2A9900 /* UIImage+Resize.swift in Sources */,
@@ -312,6 +337,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48191B63251DBD29737280E4 /* DeckFileTests.swift in Sources */,
 				12AC966399FBA15F036E2F35 /* PDFExtractorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -353,12 +379,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = GV76VP4G8V;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Name That Face";
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
-				INFOPLIST_KEY_NSCameraUsageDescription = "The camera is used to take a photo of a person for their flashcard.";
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_FILE = NamesAndFaces/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -498,12 +519,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = GV76VP4G8V;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = "Name That Face";
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
-				INFOPLIST_KEY_NSCameraUsageDescription = "The camera is used to take a photo of a person for their flashcard.";
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_FILE = NamesAndFaces/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

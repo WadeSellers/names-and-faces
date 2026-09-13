@@ -15,6 +15,8 @@ struct DeckDetailView: View {
     @State private var editingPerson: Person?
     @State private var showingAddPerson = false
     @State private var importError: String?
+    @State private var shareItem: ShareItem?
+    @State private var shareError: String?
 
     private var sortedPeople: [Person] {
         deck.people.sorted {
@@ -60,6 +62,15 @@ struct DeckDetailView: View {
         .navigationTitle(deck.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            if !deck.people.isEmpty {
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        shareDeck()
+                    } label: {
+                        Label("Share Deck", systemImage: "square.and.arrow.up")
+                    }
+                }
+            }
             ToolbarItem(placement: .primaryAction) {
                 Menu {
                     Button {
@@ -132,6 +143,19 @@ struct DeckDetailView: View {
         .sheet(isPresented: $showingAddPerson) {
             PersonEditView(deck: deck, person: nil)
         }
+        .sheet(item: $shareItem) { item in
+            ShareSheet(url: item.url) {
+                try? FileManager.default.removeItem(at: item.url)
+            }
+        }
+        .alert("Couldn't Share Deck", isPresented: .init(
+            get: { shareError != nil },
+            set: { if !$0 { shareError = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(shareError ?? "")
+        }
         .fullScreenCover(isPresented: $showingStudy) {
             StudyView(people: deck.people)
                 .navigationTransition(.zoom(sourceID: "study", in: studyZoom))
@@ -170,6 +194,19 @@ struct DeckDetailView: View {
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity)
+    }
+}
+
+private extension DeckDetailView {
+    /// Writes the deck to a file and hands it to the share sheet. AirDrop,
+    /// Messages, Mail, Files — the deck travels as a file, so it keeps working
+    /// long after it was sent and needs nothing from a server.
+    func shareDeck() {
+        do {
+            shareItem = ShareItem(url: try DeckFile(deck: deck).writeToTemporaryFile())
+        } catch {
+            shareError = error.localizedDescription
+        }
     }
 }
 

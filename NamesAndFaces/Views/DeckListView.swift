@@ -15,6 +15,7 @@ struct DeckListView: View {
     @State private var importRequest: ImportRequest?
     @State private var importingInto: Deck?
     @State private var importError: String?
+    @State private var shareItem: ShareItem?
 
     private static let pitch = "Import a PDF of headshots. Every face is found, the name printed with it is read, and you get a deck of flashcards — no typing, no cropping."
 
@@ -39,6 +40,16 @@ struct DeckListView: View {
                                     DeckDetailView(deck: deck)
                                 } label: {
                                     DeckRow(deck: deck)
+                                }
+                                .swipeActions(edge: .leading) {
+                                    if !deck.people.isEmpty {
+                                        Button {
+                                            share(deck)
+                                        } label: {
+                                            Label("Share", systemImage: "square.and.arrow.up")
+                                        }
+                                        .tint(.accentColor)
+                                    }
                                 }
                             }
                             .onDelete(perform: deleteDecks)
@@ -91,6 +102,11 @@ struct DeckListView: View {
             } message: {
                 Text(importError ?? "")
             }
+            .sheet(item: $shareItem) { item in
+                ShareSheet(url: item.url) {
+                    try? FileManager.default.removeItem(at: item.url)
+                }
+            }
             .sheet(item: $importRequest, onDismiss: discardEmptyImportDeck) { request in
                 if let deck = importingInto {
                     ImportReviewView(deck: deck, url: request.url)
@@ -137,6 +153,11 @@ struct DeckListView: View {
             .replacingOccurrences(of: "-", with: " ")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         return raw.isEmpty ? "New Group" : raw
+    }
+
+    private func share(_ deck: Deck) {
+        guard let url = try? DeckFile(deck: deck).writeToTemporaryFile() else { return }
+        shareItem = ShareItem(url: url)
     }
 
     private func deleteDecks(at offsets: IndexSet) {
