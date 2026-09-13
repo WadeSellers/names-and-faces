@@ -144,7 +144,7 @@ struct DeckDetailView: View {
             PersonEditView(deck: deck, person: nil)
         }
         .sheet(item: $shareItem) { item in
-            ShareSheet(url: item.url) {
+            ShareSheet(item: item) {
                 try? FileManager.default.removeItem(at: item.url)
             }
         }
@@ -203,7 +203,10 @@ private extension DeckDetailView {
     /// long after it was sent and needs nothing from a server.
     func shareDeck() {
         do {
-            shareItem = ShareItem(url: try DeckFile(deck: deck).writeToTemporaryFile())
+            let file = DeckFile(deck: deck)
+            shareItem = ShareItem(url: try file.writeToTemporaryFile(),
+                                  deckName: deck.name,
+                                  faceCount: file.people.count)
         } catch {
             shareError = error.localizedDescription
         }

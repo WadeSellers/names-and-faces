@@ -103,7 +103,7 @@ struct DeckListView: View {
                 Text(importError ?? "")
             }
             .sheet(item: $shareItem) { item in
-                ShareSheet(url: item.url) {
+                ShareSheet(item: item) {
                     try? FileManager.default.removeItem(at: item.url)
                 }
             }
@@ -156,8 +156,9 @@ struct DeckListView: View {
     }
 
     private func share(_ deck: Deck) {
-        guard let url = try? DeckFile(deck: deck).writeToTemporaryFile() else { return }
-        shareItem = ShareItem(url: url)
+        let file = DeckFile(deck: deck)
+        guard let url = try? file.writeToTemporaryFile() else { return }
+        shareItem = ShareItem(url: url, deckName: deck.name, faceCount: file.people.count)
     }
 
     private func deleteDecks(at offsets: IndexSet) {

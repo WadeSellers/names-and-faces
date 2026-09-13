@@ -24,15 +24,6 @@ extension Deck {
     }
 }
 
-/// A user-adjusted crop, normalized 0...1 with a top-left origin,
-/// relative to the original image.
-struct CropRegion: Codable, Equatable {
-    var x: Double
-    var y: Double
-    var width: Double
-    var height: Double
-}
-
 @Model
 final class Person {
     static let maxBox = 4
