@@ -14,7 +14,7 @@ struct ShareItem: Identifiable {
         """
         “\(deckName)” — \(faceCount) \(faceCount == 1 ? "face" : "faces") to learn. \
         Open the file in Name That Face and it becomes a deck of flashcards. \
-        Don't have the app yet? https://wadesellers.com/projects/names-and-faces.html
+        Don't have the app yet? https://apps.apple.com/app/id6811378880
         """
     }
 
