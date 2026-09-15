@@ -11,7 +11,16 @@ struct DeckImportRequest: Identifiable {
 /// person gets looked at before it lands in your library — never a silent
 /// import.
 struct DeckImportView: View {
-    let url: URL
+    /// A file someone tapped, or a deck already fetched by code.
+    enum Source {
+        case url(URL)
+        case file(DeckFile)
+    }
+
+    let source: Source
+
+    init(url: URL) { self.source = .url(url) }
+    init(file: DeckFile) { self.source = .file(file) }
 
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
@@ -107,7 +116,10 @@ struct DeckImportView: View {
 
     private func load() {
         do {
-            phase = .ready(try DeckFile.read(from: url))
+            switch source {
+            case .url(let url): phase = .ready(try DeckFile.read(from: url))
+            case .file(let file): phase = .ready(file)
+            }
         } catch {
             phase = .failed(error.localizedDescription)
         }

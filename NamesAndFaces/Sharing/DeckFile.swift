@@ -119,6 +119,13 @@ extension DeckFile {
         } catch {
             throw ReadError.unreadable
         }
+        return try read(from: data)
+    }
+
+    /// Same checks as reading a file — a deck that arrives by code is exactly
+    /// as untrusted as one that arrives by AirDrop.
+    static func read(from data: Data) throws -> DeckFile {
+        guard data.count <= Limits.maxFileBytes else { throw ReadError.tooLarge }
 
         var file: DeckFile
         do {

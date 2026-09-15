@@ -15,7 +15,16 @@ struct DeckListView: View {
     @State private var importRequest: ImportRequest?
     @State private var importingInto: Deck?
     @State private var importError: String?
-    @State private var shareItem: ShareItem?
+    @State private var sharingDeck: Deck?
+    @State private var choosingNewDeck = false
+    @State private var enteringCode = false
+    @State private var redeemedDeck: RedeemedDeck?
+
+    /// A deck fetched by code, waiting for its preview.
+    private struct RedeemedDeck: Identifiable {
+        let id = UUID()
+        let file: DeckFile
+    }
 
     private static let pitch = "Import a PDF of headshots. Every face is found, the name printed with it is read, and you get a deck of flashcards — no typing, no cropping."
 
@@ -24,13 +33,14 @@ struct DeckListView: View {
             Group {
                 if decks.isEmpty {
                     ContentUnavailableView {
-                        Label("No Groups Yet", systemImage: "doc.viewfinder")
+                        Label("No Decks Yet", systemImage: "doc.viewfinder")
                     } description: {
                         Text(Self.pitch)
                     } actions: {
                         Button("Import a PDF") { showingFileImporter = true }
                             .buttonStyle(.borderedProminent)
-                        Button("Start an Empty Group") { promptForNewDeck() }
+                        Button("Enter a Code") { enteringCode = true }
+                        Button("Take Photos") { promptForNewDeck() }
                     }
                 } else {
                     List {
@@ -44,7 +54,7 @@ struct DeckListView: View {
                                 .swipeActions(edge: .leading) {
                                     if !deck.people.isEmpty {
                                         Button {
-                                            share(deck)
+                                            sharingDeck = deck
                                         } label: {
                                             Label("Share", systemImage: "square.and.arrow.up")
                                         }
@@ -53,6 +63,15 @@ struct DeckListView: View {
                                 }
                             }
                             .onDelete(perform: deleteDecks)
+
+                            Button {
+                                choosingNewDeck = true
+                            } label: {
+                                Label("New Deck", systemImage: "plus.circle.fill")
+                                    .font(.headline)
+                                    .foregroundStyle(Color.accentColor)
+                                    .padding(.vertical, 8)
+                            }
                         } footer: {
                             Text(Self.pitch)
                                 .padding(.top, 6)
@@ -61,30 +80,32 @@ struct DeckListView: View {
                 }
             }
             .navigationTitle("Name That Face")
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Menu {
-                        Button {
-                            showingFileImporter = true
-                        } label: {
-                            Label("Import a PDF", systemImage: "doc.viewfinder")
-                        }
-                        Button {
-                            promptForNewDeck()
-                        } label: {
-                            Label("Start an Empty Group", systemImage: "folder.badge.plus")
-                        }
-                    } label: {
-                        Label("Add", systemImage: "plus")
-                    }
-                }
+            .confirmationDialog("New Deck", isPresented: $choosingNewDeck, titleVisibility: .hidden) {
+                Button("Import a PDF") { showingFileImporter = true }
+                Button("Enter a Code") { enteringCode = true }
+                Button("Take Photos") { promptForNewDeck() }
+                Button("Cancel", role: .cancel) {}
             }
-            .alert("New Group", isPresented: $showingNewDeckAlert) {
-                TextField("Group name", text: $newDeckName)
+            .alert("New Deck", isPresented: $showingNewDeckAlert) {
+                TextField("Deck name", text: $newDeckName)
                 Button("Create") { createDeck() }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("Name this group — your new class, cast, team, or cohort.")
+                Text("Name it, then add people with your camera or photo library.")
+            }
+            .sheet(isPresented: $enteringCode) {
+                EnterCodeView { file in
+                    // Let the code sheet finish closing before the preview opens.
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
+                        redeemedDeck = RedeemedDeck(file: file)
+                    }
+                }
+            }
+            .sheet(item: $redeemedDeck) { redeemed in
+                DeckImportView(file: redeemed.file)
+            }
+            .sheet(item: $sharingDeck) { deck in
+                ShareDeckView(deck: deck)
             }
             .fileImporter(isPresented: $showingFileImporter, allowedContentTypes: [.pdf]) { result in
                 switch result {
@@ -101,11 +122,6 @@ struct DeckListView: View {
                 Button("OK", role: .cancel) {}
             } message: {
                 Text(importError ?? "")
-            }
-            .sheet(item: $shareItem) { item in
-                ShareSheet(item: item) {
-                    try? FileManager.default.removeItem(at: item.url)
-                }
             }
             .sheet(item: $importRequest, onDismiss: discardEmptyImportDeck) { request in
                 if let deck = importingInto {
@@ -152,13 +168,7 @@ struct DeckListView: View {
             .replacingOccurrences(of: "_", with: " ")
             .replacingOccurrences(of: "-", with: " ")
             .trimmingCharacters(in: .whitespacesAndNewlines)
-        return raw.isEmpty ? "New Group" : raw
-    }
-
-    private func share(_ deck: Deck) {
-        let file = DeckFile(deck: deck)
-        guard let url = try? file.writeToTemporaryFile() else { return }
-        shareItem = ShareItem(url: url, deckName: deck.name, faceCount: file.people.count)
+        return raw.isEmpty ? "New Deck" : raw
     }
 
     private func deleteDecks(at offsets: IndexSet) {

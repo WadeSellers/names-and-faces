@@ -9,6 +9,12 @@ final class Deck {
     @Relationship(deleteRule: .cascade, inverse: \Person.deck)
     var people: [Person] = []
 
+    /// The 6-digit code this deck is currently shared under, if any.
+    var shareCode: String?
+    /// Proves this phone shared it, so only this phone can stop sharing.
+    var shareOwnerToken: String?
+    var shareExpiresAt: Date?
+
     init(name: String, createdAt: Date = .now) {
         self.name = name
         self.createdAt = createdAt
@@ -16,6 +22,12 @@ final class Deck {
 }
 
 extension Deck {
+    /// A code that hasn't expired on the server yet.
+    var activeShareCode: String? {
+        guard let shareCode, let shareExpiresAt, shareExpiresAt > .now else { return nil }
+        return shareCode
+    }
+
     /// 0...1 — average Leitner box across the deck.
     var mastery: Double {
         guard !people.isEmpty else { return 0 }

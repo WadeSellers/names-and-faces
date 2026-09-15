@@ -20,6 +20,7 @@
 		3CE4A569062118E11A2A9900 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2FC894D8E5770AEF3BA2BA /* UIImage+Resize.swift */; };
 		48191B63251DBD29737280E4 /* DeckFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E88E9330F5CB313DBDAC9E5 /* DeckFileTests.swift */; };
 		48E6935DC8C4F5B3DA8C28F4 /* B-name-beside.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D626777C8E0F42F3CE552F84 /* B-name-beside.pdf */; };
+		540A8EF92E3002BCE0AC36E6 /* CodeShareClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FF4C6F86D818CDA1B2C942 /* CodeShareClient.swift */; };
 		550B042D536AB360F61A5987 /* StudyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AC9E81CC2657830D1EC22F /* StudyView.swift */; };
 		657CF323C52597EFE0A147D4 /* DeckImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B0E70F3D33D0158F0CD2B5 /* DeckImportView.swift */; };
 		68CEAF90DB72B7FFA85F66A0 /* DeckFile+Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B41BE2BBAB754B5D61CD88 /* DeckFile+Deck.swift */; };
@@ -35,8 +36,10 @@
 		C073BC1551622780191BFF23 /* StudySession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9534BDFAA05C44E4125E07D /* StudySession.swift */; };
 		C4A7A02EF86EAEF00A8B45E2 /* F-two-line-name.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 56E39E6385C7C252C7A28BC1 /* F-two-line-name.pdf */; };
 		C72E172604292A98C39D1460 /* DeckFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60399425FDC5FFD32F13C0E7 /* DeckFile.swift */; };
+		C937001B4D13088E4EE56688 /* EnterCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299AEF05EF8B135997B1B13C /* EnterCodeView.swift */; };
 		D0C89B7F7C763021F1111224 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B468CDF1E81AEB8E2EC1EB05 /* ShareSheet.swift */; };
 		D61825280AAA4723DCFEA206 /* DeckDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C8A667759D85277A9C1D9C /* DeckDetailView.swift */; };
+		D94B1A737BF4B0AFD19D9940 /* ShareDeckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4C6BF73D7D4F28CE09B82B /* ShareDeckView.swift */; };
 		E3BF13B91F67BA449CBF9D41 /* PDFExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A60E240B21BB2F50D1F6E20 /* PDFExtractor.swift */; };
 		EBDC683968A7BEB0CC15A9BB /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = BF57D4438E6155D7EB1FF6E2 /* PrivacyInfo.xcprivacy */; };
 		F1D890D9B95B8D209CAA902B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 55AF9469373BACDEF7F6147A /* Assets.xcassets */; };
@@ -75,11 +78,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		08FF4C6F86D818CDA1B2C942 /* CodeShareClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeShareClient.swift; sourceTree = "<group>"; };
 		0DA564541138B682E103A7BD /* A-grid-name-below.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "A-grid-name-below.pdf"; sourceTree = "<group>"; };
 		1571BF57F7DAFCE63D481990 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		16BBE36CE2B6F0C84723BD0A /* DeckListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckListView.swift; sourceTree = "<group>"; };
 		20A4E1008A45A1C0AE83C339 /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
 		21D6FD11E16FB2CBB300DA2F /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		299AEF05EF8B135997B1B13C /* EnterCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCodeView.swift; sourceTree = "<group>"; };
 		34B41BE2BBAB754B5D61CD88 /* DeckFile+Deck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeckFile+Deck.swift"; sourceTree = "<group>"; };
 		3A60E240B21BB2F50D1F6E20 /* PDFExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFExtractor.swift; sourceTree = "<group>"; };
 		3AF9955933D9B3623C9508FD /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
@@ -109,6 +114,7 @@
 		D626777C8E0F42F3CE552F84 /* B-name-beside.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "B-name-beside.pdf"; sourceTree = "<group>"; };
 		E9534BDFAA05C44E4125E07D /* StudySession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudySession.swift; sourceTree = "<group>"; };
 		EA8E2F40C089B6141994709C /* D-dense-yearbook.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "D-dense-yearbook.pdf"; sourceTree = "<group>"; };
+		EE4C6BF73D7D4F28CE09B82B /* ShareDeckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareDeckView.swift; sourceTree = "<group>"; };
 		F38604C203D527C60224F185 /* PresidentsDemoDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresidentsDemoDeck.swift; sourceTree = "<group>"; };
 		F4F7C2D0B5513195EA166ECE /* C-name-above.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "C-name-above.pdf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -252,9 +258,12 @@
 		FB4222EA0194FAF638B3E8E5 /* Sharing */ = {
 			isa = PBXGroup;
 			children = (
+				08FF4C6F86D818CDA1B2C942 /* CodeShareClient.swift */,
 				60399425FDC5FFD32F13C0E7 /* DeckFile.swift */,
 				34B41BE2BBAB754B5D61CD88 /* DeckFile+Deck.swift */,
 				65B0E70F3D33D0158F0CD2B5 /* DeckImportView.swift */,
+				299AEF05EF8B135997B1B13C /* EnterCodeView.swift */,
+				EE4C6BF73D7D4F28CE09B82B /* ShareDeckView.swift */,
 				B468CDF1E81AEB8E2EC1EB05 /* ShareSheet.swift */,
 			);
 			path = Sharing;
@@ -390,6 +399,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2E92C2F20906601146B2ED33 /* CameraPicker.swift in Sources */,
+				540A8EF92E3002BCE0AC36E6 /* CodeShareClient.swift in Sources */,
 				360BC25A9C1D094FD2E8D43E /* CropEditorView.swift in Sources */,
 				18B3D17F2CE9116B4D269157 /* CropRegion.swift in Sources */,
 				D61825280AAA4723DCFEA206 /* DeckDetailView.swift in Sources */,
@@ -397,12 +407,14 @@
 				C72E172604292A98C39D1460 /* DeckFile.swift in Sources */,
 				657CF323C52597EFE0A147D4 /* DeckImportView.swift in Sources */,
 				FCB3815BB80389595D3E1D98 /* DeckListView.swift in Sources */,
+				C937001B4D13088E4EE56688 /* EnterCodeView.swift in Sources */,
 				AC924EA3279C7419D81E0882 /* ImportReviewView.swift in Sources */,
 				B35E016351978C7016A67E3B /* Models.swift in Sources */,
 				234A3722D2B5FEB89EFD626C /* NamesAndFacesApp.swift in Sources */,
 				E3BF13B91F67BA449CBF9D41 /* PDFExtractor.swift in Sources */,
 				1C9846095CBF5AFBC40B380A /* PersonEditView.swift in Sources */,
 				7CF56D8F87B9E32AD291B217 /* PresidentsDemoDeck.swift in Sources */,
+				D94B1A737BF4B0AFD19D9940 /* ShareDeckView.swift in Sources */,
 				D0C89B7F7C763021F1111224 /* ShareSheet.swift in Sources */,
 				C073BC1551622780191BFF23 /* StudySession.swift in Sources */,
 				550B042D536AB360F61A5987 /* StudyView.swift in Sources */,
