@@ -1,26 +1,10 @@
 import SwiftUI
 import SwiftData
 
-/// Wraps an incoming file URL so it can drive a `.sheet(item:)`.
-struct DeckImportRequest: Identifiable {
-    let id = UUID()
-    let url: URL
-}
-
-/// Shown when someone opens a `.ntfdeck` sent to them. A deck from another
-/// person gets looked at before it lands in your library — never a silent
-/// import.
+/// Shown after a code fetches someone's deck. A deck from another person gets
+/// looked at before it lands in your library — never a silent import.
 struct DeckImportView: View {
-    /// A file someone tapped, or a deck already fetched by code.
-    enum Source {
-        case url(URL)
-        case file(DeckFile)
-    }
-
-    let source: Source
-
-    init(url: URL) { self.source = .url(url) }
-    init(file: DeckFile) { self.source = .file(file) }
+    let file: DeckFile
 
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
@@ -115,14 +99,7 @@ struct DeckImportView: View {
     }
 
     private func load() {
-        do {
-            switch source {
-            case .url(let url): phase = .ready(try DeckFile.read(from: url))
-            case .file(let file): phase = .ready(file)
-            }
-        } catch {
-            phase = .failed(error.localizedDescription)
-        }
+        phase = .ready(file)
     }
 
     private func add(_ file: DeckFile) {

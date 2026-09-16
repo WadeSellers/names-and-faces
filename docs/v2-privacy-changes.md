@@ -4,8 +4,6 @@
 App Privacy answers and the privacy policy both have to change *when V2 is
 submitted*. The policy stays as-is until then; it is accurate for 1.0.
 
-Sharing **as a file** does not touch the server and changes nothing.
-
 ## App Store Connect → App Privacy
 
 Data collection: **Yes**. For each type below: *not linked to the user's
@@ -30,9 +28,6 @@ advertising or hardware identifier. Declaring it is the conservative answer.
 > server keeps a count of wrong codes for each phone (using a random ID the
 > app creates) and for each network address, and discards those counts within
 > an hour.
->
-> **Sharing a deck as a file** sends it directly by AirDrop, Messages, Mail, or
-> Files, and never passes through our server.
 
 And change the opening line, which currently says the app talks to no server.
 

@@ -1,16 +1,14 @@
 import SwiftUI
 import SwiftData
 
-/// Two ways out for a deck: a 6-digit code anyone can type in, or the file
-/// itself. The code leads, because it works for a whole room at once — write
-/// it on a whiteboard, say it in a meeting.
+/// Sharing a deck is a 6-digit code anyone can type in. It works for a whole
+/// room at once — write it on a whiteboard, say it in a meeting.
 struct ShareDeckView: View {
     @Bindable var deck: Deck
 
     @Environment(\.dismiss) private var dismiss
     @State private var isWorking = false
     @State private var errorMessage: String?
-    @State private var fileItem: ShareItem?
     @State private var codeMessageItem: CodeMessage?
     @State private var confirmingStop = false
 
@@ -28,21 +26,10 @@ struct ShareDeckView: View {
                     } else {
                         getCodeRow
                     }
-                } header: {
-                    Text("Share with a code")
                 } footer: {
                     Text("Anyone with Name That Face can tap New Deck \u{2192} Enter a Code and get this deck, cropped and named. Codes stop working after 30 days.")
                 }
 
-                Section {
-                    Button {
-                        sendFile()
-                    } label: {
-                        Label("Send as a File", systemImage: "doc")
-                    }
-                } footer: {
-                    Text("AirDrop, Messages, or Mail. Nothing is stored online.")
-                }
             }
             .navigationTitle("Share \u{201C}\(deck.name)\u{201D}")
             .navigationBarTitleDisplayMode(.inline)
@@ -63,9 +50,6 @@ struct ShareDeckView: View {
                 Button("Stop Sharing", role: .destructive) { Task { await stopSharing() } }
             } message: {
                 Text("The code stops working and the copy online is deleted. Anyone who already added the deck keeps it.")
-            }
-            .sheet(item: $fileItem) { item in
-                ShareSheet(item: item) { try? FileManager.default.removeItem(at: item.url) }
             }
             .sheet(item: $codeMessageItem) { message in
                 TextShareSheet(text: message.text)
@@ -152,17 +136,6 @@ struct ShareDeckView: View {
             deck.shareCode = nil
             deck.shareOwnerToken = nil
             deck.shareExpiresAt = nil
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    private func sendFile() {
-        let file = DeckFile(deck: deck)
-        do {
-            fileItem = ShareItem(url: try file.writeToTemporaryFile(),
-                                 deckName: deck.name,
-                                 faceCount: file.people.count)
         } catch {
             errorMessage = error.localizedDescription
         }

@@ -1,5 +1,12 @@
 # Deck sharing — V2 spec
 
+> **Superseded 2026-09-16.** Sharing decks as files was built, then removed in
+> favor of 6-digit share codes only (Wade's call: the code is simpler for the
+> person receiving). What survives from this spec is the deck *format* —
+> `DeckFile`, a binary plist — which is now the payload a share code stores on
+> the server. The export UI, `.ntfdeck` file type, Open With handling, and the
+> Quick Look preview extension are gone. See `docs/v2-privacy-changes.md`.
+
 A deck becomes a file. Export it, hand it over any way you already hand
 things over, the other person taps it and it opens in the app: cropped,
 named, ready to study.

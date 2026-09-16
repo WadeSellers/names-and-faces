@@ -2,18 +2,14 @@ import Foundation
 import ImageIO
 import UIKit
 
-/// A deck written out as a single file, so it can be handed to someone over
-/// AirDrop, Messages, Mail, Files — anything that moves a file. There is no
-/// server on either end, so a shared deck never expires.
+/// A deck packed into one blob — what a share code stores on the server and
+/// what the receiving phone unpacks.
 ///
 /// Binary property list rather than JSON: plists store `Data` natively, where
 /// JSON would base64 every portrait and inflate the file by a third.
 struct DeckFile: Codable {
     /// Bumped when the shape changes. A reader refuses versions it predates.
     static let currentVersion = 1
-
-    /// Extension and type identifier, declared in Info.plist.
-    static let fileExtension = "ntfdeck"
 
     var formatVersion: Int
     var deckName: String
@@ -55,9 +51,9 @@ extension DeckFile {
         var errorDescription: String? {
             switch self {
             case .tooLarge:
-                return "That deck file is too large to open."
+                return "That deck is too large to open."
             case .unreadable:
-                return "That file isn't a deck, or it was damaged on the way here."
+                return "That deck was damaged on the way here. Ask for a new code."
             case .fromANewerApp:
                 return "That deck was made with a newer version of Name That Face. Update the app to open it."
             case .empty:
@@ -75,56 +71,13 @@ extension DeckFile {
         encoder.outputFormat = .binary
         return try encoder.encode(self)
     }
-
-    /// Writes the deck to a temporary file named after the deck, ready to hand
-    /// to a share sheet. The caller deletes it when the sheet goes away.
-    func writeToTemporaryFile() throws -> URL {
-        let directory = FileManager.default.temporaryDirectory
-            .appendingPathComponent("shared-decks", isDirectory: true)
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-
-        let url = directory
-            .appendingPathComponent(DeckFile.safeFileName(for: deckName))
-            .appendingPathExtension(DeckFile.fileExtension)
-
-        try encoded().write(to: url, options: .atomic)
-        return url
-    }
-
-    /// Keeps the deck's own name on the file where it can, without letting a
-    /// deck name become a path.
-    static func safeFileName(for name: String) -> String {
-        var cleaned = name.components(separatedBy: .init(charactersIn: "/\\:*?\"<>|"))
-            .joined(separator: " ")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        if cleaned.count > 60 { cleaned = String(cleaned.prefix(60)) }
-        return cleaned.isEmpty ? "Deck" : cleaned
-    }
 }
 
 // MARK: - Reading
 
 extension DeckFile {
-    /// Reads a deck file from disk. Every failure is an error to show, never a
-    /// crash and never a partial import.
-    static func read(from url: URL) throws -> DeckFile {
-        let scoped = url.startAccessingSecurityScopedResource()
-        defer { if scoped { url.stopAccessingSecurityScopedResource() } }
-
-        let size = (try? url.resourceValues(forKeys: [.fileSizeKey]).fileSize) ?? 0
-        guard size <= Limits.maxFileBytes else { throw ReadError.tooLarge }
-
-        let data: Data
-        do {
-            data = try Data(contentsOf: url)
-        } catch {
-            throw ReadError.unreadable
-        }
-        return try read(from: data)
-    }
-
-    /// Same checks as reading a file — a deck that arrives by code is exactly
-    /// as untrusted as one that arrives by AirDrop.
+    /// Unpacks a deck fetched by code. Every failure is an error to show, never
+    /// a crash and never a partial import — the bytes came from the network.
     static func read(from data: Data) throws -> DeckFile {
         guard data.count <= Limits.maxFileBytes else { throw ReadError.tooLarge }
 

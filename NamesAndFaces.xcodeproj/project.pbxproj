@@ -7,39 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		041AF51706E54B73CF08463D /* ShareMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E55E375982FAD2FEE683A46 /* ShareMessageTests.swift */; };
 		06BC21BAA5FFBAEAF386EC06 /* E-name-plus-role.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 5B2486800619ECC932C19514 /* E-name-plus-role.pdf */; };
-		0DD7DEDC65E383C9AEF77580 /* DeckPreview.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 97A0E5DAE122377FFC386A1C /* DeckPreview.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		12AC966399FBA15F036E2F35 /* PDFExtractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46984D1BF9CF9D4BD05D313A /* PDFExtractorTests.swift */; };
 		18B3D17F2CE9116B4D269157 /* CropRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A217875127C718CBD70778 /* CropRegion.swift */; };
 		1C9846095CBF5AFBC40B380A /* PersonEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5561D933F2D955635D3297F0 /* PersonEditView.swift */; };
 		234A3722D2B5FEB89EFD626C /* NamesAndFacesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9D67F945FE70E392103C25 /* NamesAndFacesApp.swift */; };
 		240C6F22303F14BE554C802F /* A-grid-name-below.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 0DA564541138B682E103A7BD /* A-grid-name-below.pdf */; };
-		297BDBB21BC4ACEE5349F34E /* DeckThumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = C23589B7F38011018030D21A /* DeckThumbnail.swift */; };
 		2E92C2F20906601146B2ED33 /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A4E1008A45A1C0AE83C339 /* CameraPicker.swift */; };
 		360BC25A9C1D094FD2E8D43E /* CropEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C283452DF3CEA0DDAECA5E4 /* CropEditorView.swift */; };
 		3CE4A569062118E11A2A9900 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2FC894D8E5770AEF3BA2BA /* UIImage+Resize.swift */; };
-		3E5826476AD8906F442E3A82 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEED430DE27123755102BCE7 /* QuickLook.framework */; };
 		48191B63251DBD29737280E4 /* DeckFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E88E9330F5CB313DBDAC9E5 /* DeckFileTests.swift */; };
 		48E6935DC8C4F5B3DA8C28F4 /* B-name-beside.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D626777C8E0F42F3CE552F84 /* B-name-beside.pdf */; };
 		540A8EF92E3002BCE0AC36E6 /* CodeShareClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FF4C6F86D818CDA1B2C942 /* CodeShareClient.swift */; };
 		550B042D536AB360F61A5987 /* StudyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5AC9E81CC2657830D1EC22F /* StudyView.swift */; };
 		657CF323C52597EFE0A147D4 /* DeckImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65B0E70F3D33D0158F0CD2B5 /* DeckImportView.swift */; };
 		68CEAF90DB72B7FFA85F66A0 /* DeckFile+Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B41BE2BBAB754B5D61CD88 /* DeckFile+Deck.swift */; };
-		6AA74A7FE7605905058E4CF5 /* DeckFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60399425FDC5FFD32F13C0E7 /* DeckFile.swift */; };
 		6C747C31FE9A059966400174 /* D-dense-yearbook.pdf in Resources */ = {isa = PBXBuildFile; fileRef = EA8E2F40C089B6141994709C /* D-dense-yearbook.pdf */; };
 		7CF56D8F87B9E32AD291B217 /* PresidentsDemoDeck.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38604C203D527C60224F185 /* PresidentsDemoDeck.swift */; };
-		7FFF930093D45AC034B4E56C /* DeckPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B175982E07579849741BF0DF /* DeckPreviewView.swift */; };
 		90DD2FCA37B10B136C2B5517 /* C-name-above.pdf in Resources */ = {isa = PBXBuildFile; fileRef = F4F7C2D0B5513195EA166ECE /* C-name-above.pdf */; };
-		970811D27D75A0648676255D /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF9955933D9B3623C9508FD /* PreviewViewController.swift */; };
-		9C0B18EF73C0C2D1238ABE6F /* CropRegion.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8A217875127C718CBD70778 /* CropRegion.swift */; };
 		AC924EA3279C7419D81E0882 /* ImportReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5674B0365241ACEBF76B7D7A /* ImportReviewView.swift */; };
 		B35E016351978C7016A67E3B /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D6FD11E16FB2CBB300DA2F /* Models.swift */; };
 		C073BC1551622780191BFF23 /* StudySession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9534BDFAA05C44E4125E07D /* StudySession.swift */; };
 		C4A7A02EF86EAEF00A8B45E2 /* F-two-line-name.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 56E39E6385C7C252C7A28BC1 /* F-two-line-name.pdf */; };
 		C72E172604292A98C39D1460 /* DeckFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60399425FDC5FFD32F13C0E7 /* DeckFile.swift */; };
 		C937001B4D13088E4EE56688 /* EnterCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 299AEF05EF8B135997B1B13C /* EnterCodeView.swift */; };
-		D0C89B7F7C763021F1111224 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B468CDF1E81AEB8E2EC1EB05 /* ShareSheet.swift */; };
 		D61825280AAA4723DCFEA206 /* DeckDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50C8A667759D85277A9C1D9C /* DeckDetailView.swift */; };
 		D94B1A737BF4B0AFD19D9940 /* ShareDeckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE4C6BF73D7D4F28CE09B82B /* ShareDeckView.swift */; };
 		E3BF13B91F67BA449CBF9D41 /* PDFExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A60E240B21BB2F50D1F6E20 /* PDFExtractor.swift */; };
@@ -56,40 +47,17 @@
 			remoteGlobalIDString = D0075EE3CE0DB91AE3D8C005;
 			remoteInfo = NamesAndFaces;
 		};
-		2EC454344026D2932CA5C1EF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3E45E9F753805D582D5F0AD6 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7D6C5BF306BDC8980AA07CD1;
-			remoteInfo = DeckPreview;
-		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		D37AF81F6F1092ED24EBDF82 /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				0DD7DEDC65E383C9AEF77580 /* DeckPreview.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		08FF4C6F86D818CDA1B2C942 /* CodeShareClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeShareClient.swift; sourceTree = "<group>"; };
 		0DA564541138B682E103A7BD /* A-grid-name-below.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "A-grid-name-below.pdf"; sourceTree = "<group>"; };
-		1571BF57F7DAFCE63D481990 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		16BBE36CE2B6F0C84723BD0A /* DeckListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckListView.swift; sourceTree = "<group>"; };
 		20A4E1008A45A1C0AE83C339 /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
 		21D6FD11E16FB2CBB300DA2F /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		299AEF05EF8B135997B1B13C /* EnterCodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnterCodeView.swift; sourceTree = "<group>"; };
 		34B41BE2BBAB754B5D61CD88 /* DeckFile+Deck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeckFile+Deck.swift"; sourceTree = "<group>"; };
 		3A60E240B21BB2F50D1F6E20 /* PDFExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFExtractor.swift; sourceTree = "<group>"; };
-		3AF9955933D9B3623C9508FD /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		3E88E9330F5CB313DBDAC9E5 /* DeckFileTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckFileTests.swift; sourceTree = "<group>"; };
 		406A930E2604569C72BAA266 /* NamesAndFacesTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = NamesAndFacesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		46984D1BF9CF9D4BD05D313A /* PDFExtractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFExtractorTests.swift; sourceTree = "<group>"; };
@@ -104,17 +72,11 @@
 		65B0E70F3D33D0158F0CD2B5 /* DeckImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckImportView.swift; sourceTree = "<group>"; };
 		6C283452DF3CEA0DDAECA5E4 /* CropEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropEditorView.swift; sourceTree = "<group>"; };
 		7CCB7626731A4A362F366AFE /* NamesAndFaces.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = NamesAndFaces.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		7E55E375982FAD2FEE683A46 /* ShareMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareMessageTests.swift; sourceTree = "<group>"; };
 		8382721DB6A4B8FE4CE0CAC0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		97A0E5DAE122377FFC386A1C /* DeckPreview.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = DeckPreview.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE2FC894D8E5770AEF3BA2BA /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
-		B175982E07579849741BF0DF /* DeckPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckPreviewView.swift; sourceTree = "<group>"; };
-		B468CDF1E81AEB8E2EC1EB05 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
 		B5AC9E81CC2657830D1EC22F /* StudyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudyView.swift; sourceTree = "<group>"; };
 		B8A217875127C718CBD70778 /* CropRegion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropRegion.swift; sourceTree = "<group>"; };
 		BF57D4438E6155D7EB1FF6E2 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		C23589B7F38011018030D21A /* DeckThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckThumbnail.swift; sourceTree = "<group>"; };
-		CEED430DE27123755102BCE7 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		D626777C8E0F42F3CE552F84 /* B-name-beside.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "B-name-beside.pdf"; sourceTree = "<group>"; };
 		E9534BDFAA05C44E4125E07D /* StudySession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudySession.swift; sourceTree = "<group>"; };
 		EA8E2F40C089B6141994709C /* D-dense-yearbook.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "D-dense-yearbook.pdf"; sourceTree = "<group>"; };
@@ -122,17 +84,6 @@
 		F38604C203D527C60224F185 /* PresidentsDemoDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresidentsDemoDeck.swift; sourceTree = "<group>"; };
 		F4F7C2D0B5513195EA166ECE /* C-name-above.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "C-name-above.pdf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFrameworksBuildPhase section */
-		04C8D793DF0B7AE324F3A836 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3E5826476AD8906F442E3A82 /* QuickLook.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		0F81C83D8767510C893ABB54 /* NamesAndFaces */ = {
@@ -156,10 +107,8 @@
 		1204598C44637D15D58B2D7A = {
 			isa = PBXGroup;
 			children = (
-				67F4D5BBCD8635D91B954EF8 /* DeckPreview */,
 				0F81C83D8767510C893ABB54 /* NamesAndFaces */,
 				B6FD4E7FBC7354E84C06EB2E /* Tests */,
-				AEA43F7B9D72856DF3C76E2D /* Frameworks */,
 				1A607D40AA9E031D22723BB9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -167,7 +116,6 @@
 		1A607D40AA9E031D22723BB9 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				97A0E5DAE122377FFC386A1C /* DeckPreview.appex */,
 				7CCB7626731A4A362F366AFE /* NamesAndFaces.app */,
 				406A930E2604569C72BAA266 /* NamesAndFacesTests.xctest */,
 			);
@@ -202,17 +150,6 @@
 				56E39E6385C7C252C7A28BC1 /* F-two-line-name.pdf */,
 			);
 			path = Fixtures;
-			sourceTree = "<group>";
-		};
-		67F4D5BBCD8635D91B954EF8 /* DeckPreview */ = {
-			isa = PBXGroup;
-			children = (
-				B175982E07579849741BF0DF /* DeckPreviewView.swift */,
-				C23589B7F38011018030D21A /* DeckThumbnail.swift */,
-				1571BF57F7DAFCE63D481990 /* Info.plist */,
-				3AF9955933D9B3623C9508FD /* PreviewViewController.swift */,
-			);
-			path = DeckPreview;
 			sourceTree = "<group>";
 		};
 		6BB19ADC440D8A421886524E /* DemoContent */ = {
@@ -261,20 +198,11 @@
 			path = App;
 			sourceTree = "<group>";
 		};
-		AEA43F7B9D72856DF3C76E2D /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				CEED430DE27123755102BCE7 /* QuickLook.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		B6FD4E7FBC7354E84C06EB2E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
 				3E88E9330F5CB313DBDAC9E5 /* DeckFileTests.swift */,
 				46984D1BF9CF9D4BD05D313A /* PDFExtractorTests.swift */,
-				7E55E375982FAD2FEE683A46 /* ShareMessageTests.swift */,
 				3E62C9CE1DABCC4B26359C8B /* Fixtures */,
 			);
 			path = Tests;
@@ -289,7 +217,6 @@
 				65B0E70F3D33D0158F0CD2B5 /* DeckImportView.swift */,
 				299AEF05EF8B135997B1B13C /* EnterCodeView.swift */,
 				EE4C6BF73D7D4F28CE09B82B /* ShareDeckView.swift */,
-				B468CDF1E81AEB8E2EC1EB05 /* ShareSheet.swift */,
 			);
 			path = Sharing;
 			sourceTree = "<group>";
@@ -316,36 +243,16 @@
 			productReference = 406A930E2604569C72BAA266 /* NamesAndFacesTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		7D6C5BF306BDC8980AA07CD1 /* DeckPreview */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 51B15722C6C2BFDC63CB50E7 /* Build configuration list for PBXNativeTarget "DeckPreview" */;
-			buildPhases = (
-				83FBD53A42EADBE76826D585 /* Sources */,
-				04C8D793DF0B7AE324F3A836 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = DeckPreview;
-			packageProductDependencies = (
-			);
-			productName = DeckPreview;
-			productReference = 97A0E5DAE122377FFC386A1C /* DeckPreview.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		D0075EE3CE0DB91AE3D8C005 /* NamesAndFaces */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D23C86B60454510C72D7E011 /* Build configuration list for PBXNativeTarget "NamesAndFaces" */;
 			buildPhases = (
 				191CB9796BBD34FFDEF47CF8 /* Sources */,
 				0790C3669A4460ADDE9929D2 /* Resources */,
-				D37AF81F6F1092ED24EBDF82 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				175555E208EF25E2F29692F3 /* PBXTargetDependency */,
 			);
 			name = NamesAndFaces;
 			packageProductDependencies = (
@@ -363,10 +270,6 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
-					7D6C5BF306BDC8980AA07CD1 = {
-						DevelopmentTeam = GV76VP4G8V;
-						ProvisioningStyle = Automatic;
-					};
 					D0075EE3CE0DB91AE3D8C005 = {
 						DevelopmentTeam = GV76VP4G8V;
 						ProvisioningStyle = Automatic;
@@ -387,7 +290,6 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				7D6C5BF306BDC8980AA07CD1 /* DeckPreview */,
 				D0075EE3CE0DB91AE3D8C005 /* NamesAndFaces */,
 				43DBADB4FC4FC08FF805C0B5 /* NamesAndFacesTests */,
 			);
@@ -441,22 +343,9 @@
 				1C9846095CBF5AFBC40B380A /* PersonEditView.swift in Sources */,
 				7CF56D8F87B9E32AD291B217 /* PresidentsDemoDeck.swift in Sources */,
 				D94B1A737BF4B0AFD19D9940 /* ShareDeckView.swift in Sources */,
-				D0C89B7F7C763021F1111224 /* ShareSheet.swift in Sources */,
 				C073BC1551622780191BFF23 /* StudySession.swift in Sources */,
 				550B042D536AB360F61A5987 /* StudyView.swift in Sources */,
 				3CE4A569062118E11A2A9900 /* UIImage+Resize.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		83FBD53A42EADBE76826D585 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				9C0B18EF73C0C2D1238ABE6F /* CropRegion.swift in Sources */,
-				6AA74A7FE7605905058E4CF5 /* DeckFile.swift in Sources */,
-				7FFF930093D45AC034B4E56C /* DeckPreviewView.swift in Sources */,
-				297BDBB21BC4ACEE5349F34E /* DeckThumbnail.swift in Sources */,
-				970811D27D75A0648676255D /* PreviewViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,18 +355,12 @@
 			files = (
 				48191B63251DBD29737280E4 /* DeckFileTests.swift in Sources */,
 				12AC966399FBA15F036E2F35 /* PDFExtractorTests.swift in Sources */,
-				041AF51706E54B73CF08463D /* ShareMessageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		175555E208EF25E2F29692F3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7D6C5BF306BDC8980AA07CD1 /* DeckPreview */;
-			targetProxy = 2EC454344026D2932CA5C1EF /* PBXContainerItemProxy */;
-		};
 		883C6F9E9DDE4601794EDBE2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = D0075EE3CE0DB91AE3D8C005 /* NamesAndFaces */;
@@ -502,27 +385,6 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NamesAndFaces.app/NamesAndFaces";
 			};
 			name = Release;
-		};
-		3353B0F7E2DB28DDE2DB6FE0 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = GV76VP4G8V;
-				ENABLE_DEBUG_DYLIB = NO;
-				INFOPLIST_FILE = DeckPreview/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.wadesellers.NamesAndFaces.DeckPreview;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
 		};
 		3999A4F664DAE5107AE9F06C /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -607,27 +469,6 @@
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
-		};
-		AEEF9ED7E34F6C361FBB6728 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = GV76VP4G8V;
-				ENABLE_DEBUG_DYLIB = NO;
-				INFOPLIST_FILE = DeckPreview/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.wadesellers.NamesAndFaces.DeckPreview;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
 		};
 		C5D88B56F81371F1DB22F2E3 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -726,15 +567,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		51B15722C6C2BFDC63CB50E7 /* Build configuration list for PBXNativeTarget "DeckPreview" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3353B0F7E2DB28DDE2DB6FE0 /* Debug */,
-				AEEF9ED7E34F6C361FBB6728 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 		709DD4DDDB2B7D2313C43874 /* Build configuration list for PBXNativeTarget "NamesAndFacesTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

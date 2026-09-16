@@ -14,21 +14,10 @@ struct NamesAndFacesApp: App {
         PresidentsDemoDeck.seedIfNeeded(into: container.mainContext)
     }
 
-    @State private var importRequest: DeckImportRequest?
-
     var body: some Scene {
         WindowGroup {
             DeckListView()
                 .fontDesign(.rounded)
-                // Someone tapped a .ntfdeck in Messages, Mail, or Files.
-                .onOpenURL { url in
-                    guard url.pathExtension.lowercased() == DeckFile.fileExtension else { return }
-                    importRequest = DeckImportRequest(url: url)
-                }
-                .sheet(item: $importRequest) { request in
-                    DeckImportView(url: request.url)
-                        .fontDesign(.rounded)
-                }
         }
         .modelContainer(container)
     }

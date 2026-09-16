@@ -2,8 +2,8 @@ import XCTest
 import SwiftData
 @testable import NamesAndFaces
 
-/// A shared deck is a file that arrives from outside the app, so these cover
-/// both halves: what goes out is complete, and what comes in can't be trusted.
+/// A shared deck arrives over the network, so these cover both halves: what
+/// goes up is complete, and what comes down can't be trusted.
 /// No Vision here, so unlike the extractor tests these run in the simulator.
 final class DeckFileTests: XCTestCase {
 
@@ -96,25 +96,10 @@ final class DeckFileTests: XCTestCase {
         XCTAssertEqual(DeckFile.uniqueName(from: "Cohort", taken: ["Cohort", "Cohort (2)"]), "Cohort (3)")
     }
 
-    func testDeckNameCannotBecomeAPath() {
-        XCTAssertEqual(DeckFile.safeFileName(for: "../../etc/passwd"), ".. .. etc passwd")
-        XCTAssertEqual(DeckFile.safeFileName(for: "   "), "Deck")
-        XCTAssertLessThanOrEqual(DeckFile.safeFileName(for: String(repeating: "a", count: 400)).count, 60)
-    }
-
     // MARK: - Untrusted input
 
-    private func write(_ data: Data, name: String = "test") throws -> URL {
-        let url = FileManager.default.temporaryDirectory
-            .appendingPathComponent(name)
-            .appendingPathExtension(DeckFile.fileExtension)
-        try data.write(to: url)
-        return url
-    }
-
-    func testGarbageFileFailsWithAMessageInsteadOfCrashing() throws {
-        let url = try write(Data("this is not a deck".utf8), name: "garbage")
-        XCTAssertThrowsError(try DeckFile.read(from: url)) { error in
+    func testGarbageFailsWithAMessageInsteadOfCrashing() throws {
+        XCTAssertThrowsError(try DeckFile.read(from: Data("this is not a deck".utf8))) { error in
             XCTAssertNotNil((error as? DeckFile.ReadError)?.errorDescription)
         }
     }
@@ -123,9 +108,7 @@ final class DeckFileTests: XCTestCase {
         let context = try makeContext()
         var file = DeckFile(deck: makeDeck(in: context))
         file.formatVersion = DeckFile.currentVersion + 1
-        let url = try write(try file.encoded(), name: "future")
-
-        XCTAssertThrowsError(try DeckFile.read(from: url)) { error in
+        XCTAssertThrowsError(try DeckFile.read(from: try file.encoded())) { error in
             guard case .fromANewerApp = error as? DeckFile.ReadError else {
                 return XCTFail("expected a version error, got \(error)")
             }
@@ -136,9 +119,7 @@ final class DeckFileTests: XCTestCase {
         let context = try makeContext()
         var file = DeckFile(deck: makeDeck(in: context))
         file.people[1].imageData = Data(repeating: 0x00, count: 128)   // not an image
-        let url = try write(try file.encoded(), name: "one-bad-face")
-
-        let read = try DeckFile.read(from: url)
+        let read = try DeckFile.read(from: try file.encoded())
         XCTAssertEqual(read.people.count, 2)
         XCTAssertEqual(Set(read.people.map(\.name)), ["Coraline Adams", "Ines Okafor"])
     }
@@ -148,9 +129,7 @@ final class DeckFileTests: XCTestCase {
         var file = DeckFile(deck: makeDeck(in: context))
         file.deckName = String(repeating: "z", count: 5_000)
         file.people[0].name = String(repeating: "y", count: 5_000)
-        let url = try write(try file.encoded(), name: "long-names")
-
-        let read = try DeckFile.read(from: url)
+        let read = try DeckFile.read(from: try file.encoded())
         XCTAssertLessThanOrEqual(read.deckName.count, DeckFile.Limits.maxNameLength)
         XCTAssertLessThanOrEqual(read.people[0].name.count, DeckFile.Limits.maxNameLength)
     }
@@ -161,9 +140,7 @@ final class DeckFileTests: XCTestCase {
         for index in file.people.indices {
             file.people[index].imageData = Data(repeating: 0x00, count: 64)
         }
-        let url = try write(try file.encoded(), name: "all-bad")
-
-        XCTAssertThrowsError(try DeckFile.read(from: url)) { error in
+        XCTAssertThrowsError(try DeckFile.read(from: try file.encoded())) { error in
             guard case .empty = error as? DeckFile.ReadError else {
                 return XCTFail("expected an empty-deck error, got \(error)")
             }
@@ -172,15 +149,15 @@ final class DeckFileTests: XCTestCase {
 
     // MARK: - The real path, end to end
 
-    func testWriteThenReadThenImport() throws {
+    func testEncodeThenReadThenImport() throws {
         let context = try makeContext()
         let deck = makeDeck(in: context, name: "Neighborhood Playhouse")
-        let url = try DeckFile(deck: deck).writeToTemporaryFile()
-        defer { try? FileManager.default.removeItem(at: url) }
 
-        XCTAssertEqual(url.lastPathComponent, "Neighborhood Playhouse.ntfdeck")
+        // Exactly what travels: bytes up to the server, the same bytes down.
+        let bytes = try DeckFile(deck: deck).encoded()
+        XCTAssertEqual(bytes.prefix(8), Data("bplist00".utf8), "the server only accepts binary plists")
 
-        let file = try DeckFile.read(from: url)
+        let file = try DeckFile.read(from: bytes)
         let receiving = try makeContext()
         let imported = file.insert(into: receiving, existingNames: ["Neighborhood Playhouse"])
 
