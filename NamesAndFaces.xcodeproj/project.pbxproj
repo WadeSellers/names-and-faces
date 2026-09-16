@@ -18,6 +18,7 @@
 		2E92C2F20906601146B2ED33 /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A4E1008A45A1C0AE83C339 /* CameraPicker.swift */; };
 		360BC25A9C1D094FD2E8D43E /* CropEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C283452DF3CEA0DDAECA5E4 /* CropEditorView.swift */; };
 		3CE4A569062118E11A2A9900 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE2FC894D8E5770AEF3BA2BA /* UIImage+Resize.swift */; };
+		3E5826476AD8906F442E3A82 /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEED430DE27123755102BCE7 /* QuickLook.framework */; };
 		48191B63251DBD29737280E4 /* DeckFileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E88E9330F5CB313DBDAC9E5 /* DeckFileTests.swift */; };
 		48E6935DC8C4F5B3DA8C28F4 /* B-name-beside.pdf in Resources */ = {isa = PBXBuildFile; fileRef = D626777C8E0F42F3CE552F84 /* B-name-beside.pdf */; };
 		540A8EF92E3002BCE0AC36E6 /* CodeShareClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08FF4C6F86D818CDA1B2C942 /* CodeShareClient.swift */; };
@@ -111,6 +112,7 @@
 		B8A217875127C718CBD70778 /* CropRegion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CropRegion.swift; sourceTree = "<group>"; };
 		BF57D4438E6155D7EB1FF6E2 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		C23589B7F38011018030D21A /* DeckThumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeckThumbnail.swift; sourceTree = "<group>"; };
+		CEED430DE27123755102BCE7 /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		D626777C8E0F42F3CE552F84 /* B-name-beside.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "B-name-beside.pdf"; sourceTree = "<group>"; };
 		E9534BDFAA05C44E4125E07D /* StudySession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudySession.swift; sourceTree = "<group>"; };
 		EA8E2F40C089B6141994709C /* D-dense-yearbook.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "D-dense-yearbook.pdf"; sourceTree = "<group>"; };
@@ -118,6 +120,17 @@
 		F38604C203D527C60224F185 /* PresidentsDemoDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresidentsDemoDeck.swift; sourceTree = "<group>"; };
 		F4F7C2D0B5513195EA166ECE /* C-name-above.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = "C-name-above.pdf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		04C8D793DF0B7AE324F3A836 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3E5826476AD8906F442E3A82 /* QuickLook.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		0F81C83D8767510C893ABB54 /* NamesAndFaces */ = {
@@ -144,6 +157,7 @@
 				67F4D5BBCD8635D91B954EF8 /* DeckPreview */,
 				0F81C83D8767510C893ABB54 /* NamesAndFaces */,
 				B6FD4E7FBC7354E84C06EB2E /* Tests */,
+				AEA43F7B9D72856DF3C76E2D /* Frameworks */,
 				1A607D40AA9E031D22723BB9 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -245,6 +259,14 @@
 			path = App;
 			sourceTree = "<group>";
 		};
+		AEA43F7B9D72856DF3C76E2D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CEED430DE27123755102BCE7 /* QuickLook.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B6FD4E7FBC7354E84C06EB2E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -296,6 +318,7 @@
 			buildConfigurationList = 51B15722C6C2BFDC63CB50E7 /* Build configuration list for PBXNativeTarget "DeckPreview" */;
 			buildPhases = (
 				83FBD53A42EADBE76826D585 /* Sources */,
+				04C8D793DF0B7AE324F3A836 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -482,6 +505,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = GV76VP4G8V;
+				ENABLE_DEBUG_DYLIB = NO;
 				INFOPLIST_FILE = DeckPreview/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -586,6 +610,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = GV76VP4G8V;
+				ENABLE_DEBUG_DYLIB = NO;
 				INFOPLIST_FILE = DeckPreview/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

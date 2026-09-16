@@ -1,4 +1,5 @@
 import Foundation
+import ImageIO
 import UIKit
 
 /// A deck written out as a single file, so it can be handed to someone over
@@ -145,12 +146,12 @@ extension DeckFile {
         // bad portrait in a cohort of 23 shouldn't cost the other 22.
         file.people = file.people
             .prefix(Limits.maxPeople)
-            .filter { $0.imageData.count <= Limits.maxImageBytes && UIImage(data: $0.imageData) != nil }
+            .filter { $0.imageData.count <= Limits.maxImageBytes && isReadableImage($0.imageData) }
             .map { person in
                 var person = person
                 person.name = sanitized(name: person.name, fallback: "Unknown")
                 if let original = person.originalImageData,
-                   original.count > Limits.maxImageBytes || UIImage(data: original) == nil {
+                   original.count > Limits.maxImageBytes || !isReadableImage(original) {
                     person.originalImageData = nil
                     person.crop = nil
                 }
@@ -159,6 +160,20 @@ extension DeckFile {
 
         guard !file.people.isEmpty else { throw ReadError.empty }
         return file
+    }
+
+    /// True when the bytes really are an image, established from the header
+    /// alone. Decoding every portrait just to check it would cost megabytes
+    /// each — survivable in the app, fatal inside an extension.
+    private static func isReadableImage(_ data: Data) -> Bool {
+        guard let source = CGImageSourceCreateWithData(data as CFData, [
+            kCGImageSourceShouldCache: false
+        ] as CFDictionary) else { return false }
+        guard CGImageSourceGetStatusAtIndex(source, 0) == .statusComplete else { return false }
+        guard let properties = CGImageSourceCopyPropertiesAtIndex(source, 0, nil) as? [CFString: Any],
+              let width = properties[kCGImagePropertyPixelWidth] as? Int,
+              let height = properties[kCGImagePropertyPixelHeight] as? Int else { return false }
+        return width > 0 && height > 0
     }
 
     private static func sanitized(name: String, fallback: String) -> String {

@@ -6,11 +6,13 @@ import QuickLook
 /// Mail, Files. Without this, a deck arrives as a name, a type, and a size.
 final class PreviewViewController: UIViewController, QLPreviewingController {
 
+
     /// Enough to show the deck is real without paying to decode a whole cohort.
     private static let facesShown = 24
     private static let thumbnailPixels: CGFloat = 220
 
     func preparePreviewOfFile(at url: URL) async throws {
+
         let root: AnyView
         do {
             let file = try DeckFile.read(from: url)
