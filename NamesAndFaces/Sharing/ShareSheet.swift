@@ -10,11 +10,16 @@ struct ShareItem: Identifiable {
 
     /// Sent alongside the file so the deck doesn't land in someone's thread as
     /// a bare attachment with no idea what to do with it.
+    /// In Messages this arrives as three bubbles — this note, an App Store card
+    /// made from the link, and the deck file — so the note says which is which,
+    /// in the order the person needs them.
     var message: String {
         """
-        “\(deckName)” — \(faceCount) \(faceCount == 1 ? "face" : "faces") to learn. \
-        Open the file in Name That Face and it becomes a deck of flashcards. \
-        Don't have the app yet? https://apps.apple.com/app/id6811378880
+        Here's a Name That Face deck: “\(deckName),” \(faceCount) \(faceCount == 1 ? "face" : "faces"), \
+        already cropped and named, so you can learn everyone before you meet them.
+
+        1. Get the free app (skip if you have it): https://apps.apple.com/app/id6811378880
+        2. Tap the deck file, then the share button, and choose Name That Face.
         """
     }
 

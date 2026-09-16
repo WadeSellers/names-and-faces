@@ -68,7 +68,7 @@ struct DeckPreviewView: View {
                     .padding(.top, 10)
             }
 
-            Text("Open in Name That Face to add this deck.")
+            Text("To add it, tap the share button and choose Name That Face.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .padding(.vertical, 16)

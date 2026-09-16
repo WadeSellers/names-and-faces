@@ -177,9 +177,13 @@ struct ShareDeckView: View {
 
     private func message(for code: String) -> String {
         """
-        Here's a Name That Face deck: \u{201C}\(deck.name)\u{201D}, \(deck.people.count) faces. \
-        Open the app, tap New Deck, choose Enter a Code, and type \(code). \
-        Don't have it yet? https://apps.apple.com/app/id6811378880
+        Here's a Name That Face deck: \u{201C}\(deck.name),\u{201D} \(deck.people.count) faces, \
+        already cropped and named.
+
+        1. Get the free app (skip if you have it): https://apps.apple.com/app/id6811378880
+        2. Tap New Deck, choose Enter a Code, and type \(spaced(code)).
+
+        The code works until \(deck.shareExpiresAt?.formatted(date: .abbreviated, time: .omitted) ?? "it expires").
         """
     }
 }
