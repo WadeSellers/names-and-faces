@@ -1,16 +1,24 @@
 import SwiftUI
 import SwiftData
 
-/// Sharing a deck is a 6-digit code anyone can type in. It works for a whole
-/// room at once — write it on a whiteboard, say it in a meeting.
+/// Tapping Share goes straight to the code: a small card with six digits and a
+/// Copy button. If the deck doesn't have a code yet, one is made on the spot —
+/// the tap on Share is the request.
 struct ShareDeckView: View {
     @Bindable var deck: Deck
 
     @Environment(\.dismiss) private var dismiss
-    @State private var isWorking = false
-    @State private var errorMessage: String?
-    @State private var codeMessageItem: CodeMessage?
+    @State private var phase: Phase = .working
+    @State private var copied = false
     @State private var confirmingStop = false
+    @State private var messageItem: CodeMessage?
+
+    private enum Phase: Equatable {
+        case working
+        case ready(String)
+        case failed(String)
+        case stopping
+    }
 
     private struct CodeMessage: Identifiable {
         let id = UUID()
@@ -18,126 +26,164 @@ struct ShareDeckView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            List {
-                Section {
-                    if let code = deck.activeShareCode {
-                        activeCode(code)
-                    } else {
-                        getCodeRow
-                    }
-                } footer: {
-                    Text("Anyone with Name That Face can tap New Deck \u{2192} Enter a Code and get this deck, cropped and named. Codes stop working after 30 days.")
-                }
+        VStack(spacing: 0) {
+            header
+                .padding(.top, 22)
 
-            }
-            .navigationTitle("Share \u{201C}\(deck.name)\u{201D}")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
+            Group {
+                switch phase {
+                case .working, .stopping:
+                    ProgressView()
+                        .controlSize(.large)
+                        .frame(height: 150)
+                case .failed(let message):
+                    failure(message)
+                case .ready(let code):
+                    codeCard(code)
                 }
             }
-            .alert("Couldn't Share", isPresented: .init(
-                get: { errorMessage != nil },
-                set: { if !$0 { errorMessage = nil } }
-            )) {
-                Button("OK", role: .cancel) {}
-            } message: {
-                Text(errorMessage ?? "")
-            }
-            .confirmationDialog("Stop sharing this deck?", isPresented: $confirmingStop, titleVisibility: .visible) {
-                Button("Stop Sharing", role: .destructive) { Task { await stopSharing() } }
-            } message: {
-                Text("The code stops working and the copy online is deleted. Anyone who already added the deck keeps it.")
-            }
-            .sheet(item: $codeMessageItem) { message in
-                TextShareSheet(text: message.text)
-            }
+            .frame(maxWidth: .infinity)
+
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 24)
+        .presentationDetents([.height(280)])
+        .presentationDragIndicator(.visible)
+        .presentationCornerRadius(28)
+        .sensoryFeedback(.success, trigger: copied) { _, new in new }
+        .task { await prepare() }
+        .confirmationDialog("Stop sharing this deck?", isPresented: $confirmingStop, titleVisibility: .visible) {
+            Button("Stop Sharing", role: .destructive) { Task { await stopSharing() } }
+        } message: {
+            Text("The code stops working and the copy online is deleted. Anyone who already added the deck keeps it.")
+        }
+        .sheet(item: $messageItem) { message in
+            TextShareSheet(text: message.text)
         }
     }
 
-    // MARK: - Rows
+    // MARK: - Pieces
 
-    private var getCodeRow: some View {
-        Button {
-            Task { await getCode() }
-        } label: {
-            HStack {
-                Label("Get a Code", systemImage: "number.square")
-                Spacer()
-                if isWorking { ProgressView() }
-            }
+    private var header: some View {
+        VStack(spacing: 4) {
+            Text("Share \u{201C}\(deck.name)\u{201D}")
+                .font(.headline)
+                .lineLimit(1)
+            Text("Anyone with Name That Face can tap New Deck \u{2192} Enter a Code.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
         }
-        .disabled(isWorking || deck.people.isEmpty)
     }
 
-    @ViewBuilder
-    private func activeCode(_ code: String) -> some View {
-        VStack(spacing: 6) {
-            Text(spaced(code))
-                .font(.system(size: 46, weight: .bold, design: .rounded))
-                .monospacedDigit()
-                .textSelection(.enabled)
-            if let expires = deck.shareExpiresAt {
-                Text("Works until \(expires.formatted(date: .abbreviated, time: .omitted))")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+    private func codeCard(_ code: String) -> some View {
+        VStack(spacing: 14) {
+            VStack(spacing: 2) {
+                Text(spaced(code))
+                    .font(.system(size: 54, weight: .bold, design: .rounded))
+                    .monospacedDigit()
+                    .textSelection(.enabled)
+                    .accessibilityLabel(code.map(String.init).joined(separator: " "))
+                if let expires = deck.shareExpiresAt {
+                    Text("Works until \(expires.formatted(date: .abbreviated, time: .omitted))")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
             }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 10)
+            .padding(.top, 14)
 
-        Button {
-            codeMessageItem = CodeMessage(text: message(for: code))
-        } label: {
-            Label("Send the Code", systemImage: "square.and.arrow.up")
-        }
+            HStack(spacing: 10) {
+                Button {
+                    copy(code)
+                } label: {
+                    Label(copied ? "Copied" : "Copy Code",
+                          systemImage: copied ? "checkmark" : "doc.on.doc")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .contentTransition(.symbolEffect(.replace))
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
 
-        Button {
-            UIPasteboard.general.string = code
-        } label: {
-            Label("Copy Code", systemImage: "doc.on.doc")
-        }
-
-        Button(role: .destructive) {
-            confirmingStop = true
-        } label: {
-            HStack {
-                Label("Stop Sharing", systemImage: "xmark.circle")
-                Spacer()
-                if isWorking { ProgressView() }
+                Button {
+                    messageItem = CodeMessage(text: message(for: code))
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.headline)
+                        .frame(width: 26)
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.large)
+                .accessibilityLabel("Send the code with instructions")
             }
+
+            Button("Stop Sharing", role: .destructive) {
+                confirmingStop = true
+            }
+            .font(.footnote)
+            .padding(.top, 2)
         }
-        .disabled(isWorking)
+    }
+
+    private func failure(_ message: String) -> some View {
+        VStack(spacing: 12) {
+            Text(message)
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+            Button("Try Again") {
+                Task { await prepare() }
+            }
+            .buttonStyle(.bordered)
+        }
+        .padding(.top, 30)
     }
 
     // MARK: - Actions
 
-    private func getCode() async {
-        isWorking = true
-        defer { isWorking = false }
+    /// Reuse the code the deck already has; otherwise make one.
+    private func prepare() async {
+        if let code = deck.activeShareCode {
+            phase = .ready(code)
+            return
+        }
+        guard !deck.people.isEmpty else {
+            phase = .failed("Add some faces before sharing this deck.")
+            return
+        }
+        phase = .working
         do {
             let shared = try await CodeShareClient.share(DeckFile(deck: deck))
             deck.shareCode = shared.code
             deck.shareOwnerToken = shared.ownerToken
             deck.shareExpiresAt = shared.expiresAt
+            phase = .ready(shared.code)
         } catch {
-            errorMessage = error.localizedDescription
+            phase = .failed(error.localizedDescription)
+        }
+    }
+
+    private func copy(_ code: String) {
+        UIPasteboard.general.string = code
+        withAnimation { copied = true }
+        Task {
+            try? await Task.sleep(for: .seconds(2))
+            withAnimation { copied = false }
         }
     }
 
     private func stopSharing() async {
         guard let code = deck.shareCode, let token = deck.shareOwnerToken else { return }
-        isWorking = true
-        defer { isWorking = false }
+        phase = .stopping
         do {
             try await CodeShareClient.stopSharing(code: code, ownerToken: token)
             deck.shareCode = nil
             deck.shareOwnerToken = nil
             deck.shareExpiresAt = nil
+            dismiss()
         } catch {
-            errorMessage = error.localizedDescription
+            phase = .failed(error.localizedDescription)
         }
     }
 
