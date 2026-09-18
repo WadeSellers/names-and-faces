@@ -3,6 +3,26 @@
 Everything App Store Connect asks for, ready to paste. Character limits noted;
 all fields below are within them.
 
+**This is the 1.2 listing.** 1.2 removes deck sharing and returns the app to
+1.0's behaviour: no sharing, no server, no network requests of any kind
+(verified — there is no `URLSession` or `URLRequest` anywhere in the target).
+Every field below is the 1.0 copy, which was already sharing-free, with a new
+What's New.
+
+## Changed back from 1.1 — do not skip
+
+1.1's submission changed two things that 1.2 must put back, or the listing will
+describe an app that no longer exists:
+
+1. **App Privacy** — 1.1 declared Photos, Other User Content and Device ID.
+   1.2 collects nothing. Set it back to **Data collection: No** (see the App
+   Privacy answers section below). This is edited in App Store Connect under
+   App Privacy, not on the version page.
+2. **Privacy policy page** — `wadesellers.com/privacy/name-that-face.html`
+   currently describes uploading decks to a server. It has to be back to the
+   nothing-leaves-your-phone version before you submit, because App Review
+   opens that URL. Same for the support page, which documents sharing.
+
 ---
 
 ## Name (30)
@@ -72,13 +92,25 @@ ALSO IN THERE
 Built by one person, for the Monday morning when a room full of new faces walks in.
 ```
 
-## What's New (first release)
+## What's New (1.2)
 ```
-First release.
+Deck sharing has been removed while I rework it.
+
+1.1 added sharing a deck with a 6-digit code, which meant a shared deck sat on a server for up to 30 days. That is not a trade I want to make with photos of other people's students, so it is gone, and the app is back to doing everything on your iPhone and nothing anywhere else.
+
+If you shared a deck with a code, that code no longer works. Any deck already on your phone is untouched.
+
+Sharing will come back when it can work without handing the photos to a server.
 ```
 
 ## App Review notes
 ```
+Note for review: version 1.1 included sharing a deck by a 6-digit code, which
+used a server. That feature has been removed in 1.2 and the app now makes no
+network requests at all. The App Privacy declaration has been set back to "no
+data collected" to match. This version is intentionally smaller in scope than
+1.1.
+
 No account or sign-in is needed — the app has no login and makes no network
 requests at all.
 
@@ -112,6 +144,12 @@ Attach: `Tests/Fixtures/A-grid-name-below.pdf`
 ## App Privacy answers
 **Data collection: No**, we do not collect data from this app. That single
 answer ends the questionnaire — no data types, no tracking.
+
+This is a **reset**, not a fresh answer: 1.1 declared Photos, Other User
+Content and Device ID for the share-by-code server. Remove all three and
+answer No. If App Store Connect will not let you reduce the declaration on the
+version page, it is because App Privacy is edited app-wide under the App
+Privacy section and then published; do that first, then submit the version.
 
 ## Age rating
 4+. Answer "None" to every content question. It is not a social app, has no

@@ -9,6 +9,16 @@ final class Deck {
     @Relationship(deleteRule: .cascade, inverse: \Person.deck)
     var people: [Person] = []
 
+    // Vestigial, and deliberately kept. 1.1 shipped deck sharing and added
+    // these three; 1.2 removes the feature but NOT the properties, so that a
+    // phone coming from 1.1 opens its existing store with no schema change at
+    // all. Dropping them would make 1.2 a backwards migration for those users,
+    // which is the one upgrade path worth not gambling on. Nothing reads them.
+    // Remove only once 1.1 is far enough back that nobody is upgrading from it.
+    var shareCode: String?
+    var shareOwnerToken: String?
+    var shareExpiresAt: Date?
+
     init(name: String, createdAt: Date = .now) {
         self.name = name
         self.createdAt = createdAt
