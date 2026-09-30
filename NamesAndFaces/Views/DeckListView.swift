@@ -15,16 +15,8 @@ struct DeckListView: View {
     @State private var importRequest: ImportRequest?
     @State private var importingInto: Deck?
     @State private var importError: String?
-    @State private var sharingDeck: Deck?
     @State private var choosingNewDeck = false
-    @State private var enteringCode = false
-    @State private var redeemedDeck: RedeemedDeck?
 
-    /// A deck fetched by code, waiting for its preview.
-    private struct RedeemedDeck: Identifiable {
-        let id = UUID()
-        let file: DeckFile
-    }
 
     private static let pitch = "Import a PDF of headshots. Every face is found, the name printed with it is read, and you get a deck of flashcards — no typing, no cropping."
 
@@ -39,7 +31,6 @@ struct DeckListView: View {
                     } actions: {
                         Button("Import a PDF") { showingFileImporter = true }
                             .buttonStyle(.borderedProminent)
-                        Button("Enter a Code") { enteringCode = true }
                         Button("Take Photos") { promptForNewDeck() }
                     }
                 } else {
@@ -50,16 +41,6 @@ struct DeckListView: View {
                                     DeckDetailView(deck: deck)
                                 } label: {
                                     DeckRow(deck: deck)
-                                }
-                                .swipeActions(edge: .leading) {
-                                    if !deck.people.isEmpty {
-                                        Button {
-                                            sharingDeck = deck
-                                        } label: {
-                                            Label("Share", systemImage: "square.and.arrow.up")
-                                        }
-                                        .tint(.accentColor)
-                                    }
                                 }
                             }
                             .onDelete(perform: deleteDecks)
@@ -82,7 +63,6 @@ struct DeckListView: View {
             .navigationTitle("Name That Face")
             .confirmationDialog("New Deck", isPresented: $choosingNewDeck, titleVisibility: .hidden) {
                 Button("Import a PDF") { showingFileImporter = true }
-                Button("Enter a Code") { enteringCode = true }
                 Button("Take Photos") { promptForNewDeck() }
                 Button("Cancel", role: .cancel) {}
             }
@@ -92,20 +72,6 @@ struct DeckListView: View {
                 Button("Cancel", role: .cancel) {}
             } message: {
                 Text("Name it, then add people with your camera or photo library.")
-            }
-            .sheet(isPresented: $enteringCode) {
-                EnterCodeView { file in
-                    // Let the code sheet finish closing before the preview opens.
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
-                        redeemedDeck = RedeemedDeck(file: file)
-                    }
-                }
-            }
-            .sheet(item: $redeemedDeck) { redeemed in
-                DeckImportView(file: redeemed.file)
-            }
-            .sheet(item: $sharingDeck) { deck in
-                ShareDeckView(deck: deck)
             }
             .fileImporter(isPresented: $showingFileImporter, allowedContentTypes: [.pdf]) { result in
                 switch result {

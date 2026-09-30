@@ -15,7 +15,6 @@ struct DeckDetailView: View {
     @State private var editingPerson: Person?
     @State private var showingAddPerson = false
     @State private var importError: String?
-    @State private var showingShare = false
 
     private var sortedPeople: [Person] {
         deck.people.sorted {
@@ -61,15 +60,6 @@ struct DeckDetailView: View {
         .navigationTitle(deck.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            if !deck.people.isEmpty {
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        showingShare = true
-                    } label: {
-                        Label("Share Deck", systemImage: "square.and.arrow.up")
-                    }
-                }
-            }
             ToolbarItem(placement: .primaryAction) {
                 Menu {
                     Button {
@@ -142,8 +132,9 @@ struct DeckDetailView: View {
         .sheet(isPresented: $showingAddPerson) {
             PersonEditView(deck: deck, person: nil)
         }
-        .sheet(isPresented: $showingShare) {
-            ShareDeckView(deck: deck)
+        .fullScreenCover(isPresented: $showingStudy) {
+            StudyView(people: deck.people)
+                .navigationTransition(.zoom(sourceID: "study", in: studyZoom))
         }
     }
 

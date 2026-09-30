@@ -1,7 +1,33 @@
-# App Store listing — Name That Face (current: 1.1)
+# App Store listing — Name That Face
 
 Everything App Store Connect asks for, ready to paste. Character limits noted;
 all fields below are within them.
+
+**This is the 1.2 listing.** 1.2 removes deck sharing and returns the app to
+1.0's behaviour: no sharing, no server, no network requests of any kind
+(verified — there is no `URLSession` or `URLRequest` anywhere in the target).
+Every field below is the 1.0 copy, which was already sharing-free, with a new
+What's New.
+
+Note: 1.2 is built on 1.1, not on 1.0, so 1.1's interface survives — New Deck
+is still a row at the bottom of the list (Import a PDF / Take Photos). Only
+sharing is gone. It also restores the Study screen, which 1.1 shipped without
+any presentation at all: the button set a flag nothing listened to, so tapping
+it did nothing. That regression is the reason this release is urgent.
+
+## Changed back from 1.1 — do not skip
+
+1.1's submission changed two things that 1.2 must put back, or the listing will
+describe an app that no longer exists:
+
+1. **App Privacy** — 1.1 declared Photos, Other User Content and Device ID.
+   1.2 collects nothing. Set it back to **Data collection: No** (see the App
+   Privacy answers section below). This is edited in App Store Connect under
+   App Privacy, not on the version page.
+2. **Privacy policy page** — `wadesellers.com/privacy/name-that-face.html`
+   currently describes uploading decks to a server. It has to be back to the
+   nothing-leaves-your-phone version before you submit, because App Review
+   opens that URL. Same for the support page, which documents sharing.
 
 ---
 
@@ -24,7 +50,7 @@ Free. No in-app purchases.
 
 ## Promotional text (170)
 ```
-New: share a finished deck with a 6-digit code. Import a PDF of headshots, get flashcards for everyone, and hand the whole deck to your team in one step.
+Meet a room full of strangers on Monday and greet every one of them by name on Friday. Import a PDF of headshots and it builds the flashcards for you, all on your phone.
 ```
 
 ## Keywords (100, comma separated, no spaces)
@@ -54,13 +80,10 @@ You start with three faces. Just three. Nobody learns a whole group at once, and
 
 It notices what you don't know. A new face comes around often. Keep getting someone right and they earn their way down to rare. Blank on someone you "knew" and they quietly start coming around more again. You never manage any of this. The deck just pays attention.
 
-SHARE A DECK WITH A CODE
-Did the work of cropping and naming a whole group? Tap Share and you get a 6-digit code. Anyone who types it into Name That Face gets the finished deck — every face cropped, every name right. Codes work for 30 days, and you can stop sharing anytime.
+NOTHING LEAVES YOUR PHONE
+No account. No sign-in. No servers. No subscription. No analytics, no tracking, no ads.
 
-PRIVATE BY DEFAULT
-No account. No sign-in. No subscription. No analytics, no tracking, no ads.
-
-The face detection and the text reading both run on your device using Apple's own frameworks. Your photos stay on your iPhone unless you choose to share a deck with a code — and even then, the shared copy isn't tied to you and is deleted after 30 days.
+The face detection and the text reading both run on your device using Apple's own frameworks. If those headshots are your students, their photos never leave your iPhone — which is the point.
 
 TRY IT FIRST
 No PDF handy? The app comes with a deck of US Presidents, 45 faces, so you can play the game right now and finally learn which one is Chester A. Arthur.
@@ -75,22 +98,25 @@ ALSO IN THERE
 Built by one person, for the Monday morning when a room full of new faces walks in.
 ```
 
-## What's New — 1.1
+## What's New (1.2)
 ```
-Share a deck with a code.
+Fixes the Study button.
 
-Crop and name a deck once, then hand it to anyone. Tap Share and you'll get a 6-digit code. They tap New Deck, choose Enter a Code, and the whole deck lands on their phone — every face cropped, every name right. Codes work for 30 days, and you can stop sharing anytime.
+In 1.1 the Study button did nothing — the flashcards never opened. That was my mistake and it is fixed. Study works again, and your decks and progress are exactly where you left them.
 
-Also new: New Deck now sits at the bottom of your list, with Import a PDF, Enter a Code, and Take Photos in one place.
-```
+Deck sharing has also been removed while I rework it. 1.1 let you share a deck with a 6-digit code, which meant a shared deck sat on a server for up to 30 days. That is not a trade I want to make with photos of other people's students, so it is gone and the app is back to doing everything on your iPhone and nothing anywhere else.
 
-## What's New — 1.0
-```
-First release.
+If you shared a deck with a code, that code no longer works. Any deck already on your phone is untouched. Sharing will come back when it can work without handing the photos to a server.
 ```
 
 ## App Review notes
 ```
+Note for review: version 1.1 included sharing a deck by a 6-digit code, which
+used a server. That feature has been removed in 1.2 and the app now makes no
+network requests at all. The App Privacy declaration has been set back to "no
+data collected" to match. This version is intentionally smaller in scope than
+1.1.
+
 No account or sign-in is needed — the app has no login and makes no network
 requests at all.
 
@@ -110,20 +136,9 @@ NOTE ON THE SIMULATOR: face detection requires a physical device. Apple's
 Vision framework cannot create an inference context in the iOS Simulator, so
 PDF import will fail there. The bundled US Presidents deck works everywhere.
 
-TO TEST SHARING BY CODE (new in 1.1) — works on one device:
-1. Open the "US Presidents" deck and tap the share button (top right).
-   A 6-digit code appears.
-2. Go back, tap "New Deck" at the bottom of the list, choose "Enter a Code",
-   and type that code. The deck preview appears; tap Add.
-3. Back in the deck, tap Share again and "Stop Sharing" to delete it.
-
-PRIVACY: nothing leaves the device unless the user taps Share. Sharing
-uploads that one deck (portraits and names) to our server so the code can
-retrieve it. It is not linked to any identity — the app has no accounts — and
-is deleted after 30 days or when the user taps Stop Sharing. A random
-per-install ID is used only to limit wrong-code guesses. The App Privacy
-answers were updated for this release to match. Camera and photo library
-access remain optional and are used only to add a person's portrait.
+PRIVACY: the app collects nothing and transmits nothing. Camera and photo
+library access are optional and used only to add a person's portrait, stored
+locally.
 ```
 Attach: `Tests/Fixtures/A-grid-name-below.pdf`
 
@@ -133,10 +148,14 @@ Attach: `Tests/Fixtures/A-grid-name-below.pdf`
 - Marketing (optional): `https://wadesellers.com/projects/names-and-faces.html`
 
 ## App Privacy answers
-- **1.0:** Data collection: No.
-- **1.1:** changes — see `docs/v2-privacy-changes.md` for the exact answers
-  (Photos, Other User Content, Device ID; not linked, no tracking, App
-  Functionality).
+**Data collection: No**, we do not collect data from this app. That single
+answer ends the questionnaire — no data types, no tracking.
+
+This is a **reset**, not a fresh answer: 1.1 declared Photos, Other User
+Content and Device ID for the share-by-code server. Remove all three and
+answer No. If App Store Connect will not let you reduce the declaration on the
+version page, it is because App Privacy is edited app-wide under the App
+Privacy section and then published; do that first, then submit the version.
 
 ## Age rating
 4+. Answer "None" to every content question. It is not a social app, has no

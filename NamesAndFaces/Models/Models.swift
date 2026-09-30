@@ -9,9 +9,12 @@ final class Deck {
     @Relationship(deleteRule: .cascade, inverse: \Person.deck)
     var people: [Person] = []
 
-    /// The 6-digit code this deck is currently shared under, if any.
+    // Left over from 1.1's share-by-code, which 1.2 removes. Kept so a phone
+    // coming from 1.1 opens its existing store with no schema change at all.
+    // Dropping them would make 1.2 a backwards migration for those users, which
+    // is the one upgrade path worth not gambling on. Nothing reads them.
+    // Remove only once 1.1 is far enough back that nobody is upgrading from it.
     var shareCode: String?
-    /// Proves this phone shared it, so only this phone can stop sharing.
     var shareOwnerToken: String?
     var shareExpiresAt: Date?
 
