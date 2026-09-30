@@ -91,7 +91,7 @@ No PDF handy? The app comes with a deck of US Presidents, 45 faces, so you can p
 ALSO IN THERE
 • Add people one at a time with the camera or your photo library
 • Crop any portrait by tapping it; the original is always kept, so no crop is permanent
-• Reset your progress on a group without losing the people
+• Reset your progress on a deck without losing the people
 • Works with large accessibility text sizes
 • iPhone, iOS 18 or later
 
@@ -122,7 +122,8 @@ requests at all.
 
 TO TEST THE MAIN FEATURE (PDF import):
 A sample PDF is attached to this submission. Save it to Files on the device,
-then in the app tap "+" in the top right, choose "Import a PDF", and pick it.
+then in the app tap "New Deck" at the bottom of the list, choose "Import a
+PDF", and pick it.
 The app will extract 9 portraits with their names and show the review screen.
 Tap "Add 9 People", then "Study" to see the flashcards.
 
