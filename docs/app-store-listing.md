@@ -98,6 +98,11 @@ ALSO IN THERE
 Built by one person, for the Monday morning when a room full of new faces walks in.
 ```
 
+## What's New (1.3)
+```
+You can now rename a deck. Press and hold it in the list, swipe it, or tap the deck's name at the top of the screen. Your faces and progress stay exactly as they were.
+```
+
 ## What's New (1.2)
 ```
 Fixes the Study button.
