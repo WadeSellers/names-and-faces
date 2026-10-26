@@ -16,7 +16,7 @@ struct DeckListView: View {
     @State private var importingInto: Deck?
     @State private var importError: String?
     @State private var choosingNewDeck = false
-
+    @State private var renamingDeck: Deck?
 
     private static let pitch = "Import a PDF of headshots. Every face is found, the name printed with it is read, and you get a deck of flashcards — no typing, no cropping."
 
@@ -42,8 +42,33 @@ struct DeckListView: View {
                                 } label: {
                                     DeckRow(deck: deck)
                                 }
+                                .contextMenu {
+                                    Button {
+                                        renamingDeck = deck
+                                    } label: {
+                                        Label("Rename", systemImage: "pencil")
+                                    }
+                                    Button(role: .destructive) {
+                                        delete(deck)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                                // Custom swipe actions switch off the ones
+                                // .onDelete would give, so Delete is spelled out.
+                                .swipeActions {
+                                    Button(role: .destructive) {
+                                        delete(deck)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                    Button {
+                                        renamingDeck = deck
+                                    } label: {
+                                        Label("Rename", systemImage: "pencil")
+                                    }
+                                }
                             }
-                            .onDelete(perform: deleteDecks)
 
                             Button {
                                 choosingNewDeck = true
@@ -61,6 +86,7 @@ struct DeckListView: View {
                 }
             }
             .navigationTitle("Name That Face")
+            .renameDeckAlert($renamingDeck)
             .confirmationDialog("New Deck", isPresented: $choosingNewDeck, titleVisibility: .hidden) {
                 Button("Import a PDF") { showingFileImporter = true }
                 Button("Take Photos") { promptForNewDeck() }
@@ -137,10 +163,48 @@ struct DeckListView: View {
         return raw.isEmpty ? "New Deck" : raw
     }
 
-    private func deleteDecks(at offsets: IndexSet) {
-        for index in offsets {
-            context.delete(decks[index])
+    private func delete(_ deck: Deck) {
+        withAnimation {
+            context.delete(deck)
         }
+    }
+}
+
+// MARK: - Rename
+
+extension View {
+    /// The one rename prompt, shared by the deck list and the deck itself.
+    /// Presents while `deck` is non-nil, pre-filled with the current name.
+    func renameDeckAlert(_ deck: Binding<Deck?>) -> some View {
+        modifier(RenameDeckAlert(deck: deck))
+    }
+}
+
+private struct RenameDeckAlert: ViewModifier {
+    @Binding var deck: Deck?
+
+    @State private var draftName = ""
+
+    private var trimmedName: String {
+        draftName.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    func body(content: Content) -> some View {
+        content
+            .alert("Rename Deck", isPresented: .init(
+                get: { deck != nil },
+                set: { if !$0 { deck = nil } }
+            )) {
+                TextField("Deck name", text: $draftName)
+                Button("Save") {
+                    deck?.name = trimmedName
+                }
+                .disabled(trimmedName.isEmpty)
+                Button("Cancel", role: .cancel) {}
+            }
+            .onChange(of: deck) { _, newDeck in
+                if let newDeck { draftName = newDeck.name }
+            }
     }
 }
 

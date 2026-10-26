@@ -15,6 +15,7 @@ struct DeckDetailView: View {
     @State private var editingPerson: Person?
     @State private var showingAddPerson = false
     @State private var importError: String?
+    @State private var renamingDeck: Deck?
 
     private var sortedPeople: [Person] {
         deck.people.sorted {
@@ -59,6 +60,15 @@ struct DeckDetailView: View {
         }
         .navigationTitle(deck.name)
         .navigationBarTitleDisplayMode(.inline)
+        // Tapping the inline title opens this menu, the usual home for Rename.
+        .toolbarTitleMenu {
+            Button {
+                renamingDeck = deck
+            } label: {
+                Label("Rename", systemImage: "pencil")
+            }
+        }
+        .renameDeckAlert($renamingDeck)
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
                 Menu {
