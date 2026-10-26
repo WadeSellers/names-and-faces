@@ -61,4 +61,10 @@ final class PDFExtractorTests: XCTestCase {
         let r = try report("F-two-line-name", expectedCount: 6)
         XCTAssertEqual(r.correct, 6, "a name split across two lines should rejoin")
     }
+
+    func testRankAboveNameBelow() throws {
+        let r = try report("G-rank-above-name-below", expectedCount: 9)
+        XCTAssertEqual(r.found, 9, "a rank line is not a portrait's name, so no ghost portraits")
+        XCTAssertEqual(r.correct, 9, "a small rank line above the photo must not beat the name below it")
+    }
 }
