@@ -1,17 +1,24 @@
 import SwiftUI
 import SwiftData
+import PhotosUI
 
-/// Wraps a picked PDF URL so it can drive a `.sheet(item:)`.
-struct ImportRequest: Identifiable {
-    let id = UUID()
-    let url: URL
+/// What's being imported: a PDF, or photos and screenshots from the library.
+enum ImportSource {
+    case pdf(URL)
+    case photos([PhotosPickerItem])
 }
 
-/// Runs extraction on a picked PDF, then lets the user fix names, crop
-/// portraits, and exclude bad detections before the cards are saved.
+/// Wraps a picked import so it can drive a `.sheet(item:)`.
+struct ImportRequest: Identifiable {
+    let id = UUID()
+    let source: ImportSource
+}
+
+/// Runs extraction on a picked PDF or set of photos, then lets the user fix
+/// names, crop portraits, and exclude bad detections before the cards are saved.
 struct ImportReviewView: View {
     let deck: Deck
-    let url: URL
+    let source: ImportSource
 
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
@@ -109,7 +116,7 @@ struct ImportReviewView: View {
                 .foregroundStyle(Color.accentColor)
                 .symbolEffect(.variableColor.iterative, options: .repeating)
 
-            Text(total > 0 ? "Scanning page \(page) of \(total)…" : "Reading PDF…")
+            Text(progressText(page: page, total: total))
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .monospacedDigit()
@@ -117,6 +124,15 @@ struct ImportReviewView: View {
 
             ProgressView(value: total > 0 ? Double(page) : 0, total: Double(max(total, 1)))
                 .frame(width: 200)
+        }
+    }
+
+    private func progressText(page: Int, total: Int) -> String {
+        switch source {
+        case .pdf:
+            return total > 0 ? "Scanning page \(page) of \(total)…" : "Reading PDF…"
+        case .photos:
+            return total > 0 ? "Scanning photo \(page) of \(total)…" : "Loading photos…"
         }
     }
 
@@ -143,17 +159,28 @@ struct ImportReviewView: View {
     }
 
     private func extract() async {
+        let progress: @Sendable (Int, Int) -> Void = { page, total in
+            Task { @MainActor in
+                withAnimation { phase = .extracting(page: page, total: total) }
+            }
+        }
         do {
-            let found = try await Task.detached(priority: .userInitiated) { [url] in
-                try PDFExtractor.extract(from: url) { page, total in
-                    Task { @MainActor in
-                        withAnimation { phase = .extracting(page: page, total: total) }
-                    }
-                }
-            }.value
+            let found: [ExtractedCandidate]
+            switch source {
+            case .pdf(let url):
+                found = try await Task.detached(priority: .userInitiated) {
+                    try PDFExtractor.extract(from: url, progress: progress)
+                }.value
+            case .photos(let items):
+                let images = await loadImages(items)
+                found = try await Task.detached(priority: .userInitiated) {
+                    try PDFExtractor.extract(from: images, progress: progress)
+                }.value
+            }
 
             if found.isEmpty {
-                phase = .failed("No faces were detected in that PDF. You can still add people one at a time with a photo.")
+                let what = if case .pdf = source { "that PDF" } else { "those photos" }
+                phase = .failed("No faces were detected in \(what). You can still add people one at a time with a photo.")
             } else {
                 candidates = found
                 withAnimation(.snappy) { phase = .review }
@@ -161,6 +188,19 @@ struct ImportReviewView: View {
         } catch {
             phase = .failed(error.localizedDescription)
         }
+    }
+
+    /// Library items arrive as data; a camera photo also arrives sideways with
+    /// an orientation flag, which Vision would read sideways.
+    private func loadImages(_ items: [PhotosPickerItem]) async -> [UIImage] {
+        var images: [UIImage] = []
+        for item in items {
+            if let data = try? await item.loadTransferable(type: Data.self),
+               let image = UIImage(data: data) {
+                images.append(image.uprightForImport())
+            }
+        }
+        return images
     }
 
     private func save() {

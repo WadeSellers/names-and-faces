@@ -16,6 +16,25 @@ extension UIImage {
         }
     }
 
+    /// Pixels the right way up, for code that reads `cgImage` directly. A camera
+    /// photo is stored sideways with an orientation flag; Vision and cropping
+    /// would see it sideways. Also caps the size, so a 48 MP photo doesn't
+    /// become a quarter-gigabyte bitmap.
+    func uprightForImport(maxDimension: CGFloat = 4096) -> UIImage {
+        let pixels = CGSize(width: size.width * scale, height: size.height * scale)
+        let longest = max(pixels.width, pixels.height)
+        guard imageOrientation != .up || longest > maxDimension || scale != 1 else { return self }
+
+        let factor = min(1, maxDimension / longest)
+        let newSize = CGSize(width: (pixels.width * factor).rounded(), height: (pixels.height * factor).rounded())
+
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        return UIGraphicsImageRenderer(size: newSize, format: format).image { _ in
+            draw(in: CGRect(origin: .zero, size: newSize))
+        }
+    }
+
     /// Apply a normalized crop region (top-left origin).
     func cropped(to region: CropRegion) -> UIImage {
         guard let cg = cgImage else { return self }

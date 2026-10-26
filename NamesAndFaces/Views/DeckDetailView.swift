@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import PhotosUI
 import UniformTypeIdentifiers
 
 /// One group: the grid of faces, plus import, add, and study entry points.
@@ -10,6 +11,8 @@ struct DeckDetailView: View {
     @Namespace private var studyZoom
 
     @State private var showingFileImporter = false
+    @State private var showingPhotoPicker = false
+    @State private var photoSelection: [PhotosPickerItem] = []
     @State private var importRequest: ImportRequest?
     @State private var showingStudy = false
     @State private var editingPerson: Person?
@@ -33,10 +36,11 @@ struct DeckDetailView: View {
                 ContentUnavailableView {
                     Label("No People Yet", systemImage: "doc.viewfinder")
                 } description: {
-                    Text("Import a PDF of headshots and every face and name is pulled out automatically. Or add people one at a time.")
+                    Text("Import a PDF or screenshots of headshots and every face and name is pulled out automatically. Or add people one at a time.")
                 } actions: {
                     Button("Import a PDF") { showingFileImporter = true }
                         .buttonStyle(.borderedProminent)
+                    Button("Import Screenshots") { showingPhotoPicker = true }
                     Button("Add Someone Manually") { showingAddPerson = true }
                 }
             } else {
@@ -78,6 +82,11 @@ struct DeckDetailView: View {
                         Label("Import a PDF", systemImage: "doc.viewfinder")
                     }
                     Button {
+                        showingPhotoPicker = true
+                    } label: {
+                        Label("Import Screenshots", systemImage: "photo.on.rectangle")
+                    }
+                    Button {
                         showingAddPerson = true
                     } label: {
                         Label("Add Person", systemImage: "person.badge.plus")
@@ -117,10 +126,17 @@ struct DeckDetailView: View {
                 .background(.bar)
             }
         }
+        .photosPicker(isPresented: $showingPhotoPicker, selection: $photoSelection,
+                      maxSelectionCount: 20, matching: .images)
+        .onChange(of: photoSelection) { _, items in
+            guard !items.isEmpty else { return }
+            importRequest = ImportRequest(source: .photos(items))
+            photoSelection = []
+        }
         .fileImporter(isPresented: $showingFileImporter, allowedContentTypes: [.pdf]) { result in
             switch result {
             case .success(let url):
-                importRequest = ImportRequest(url: url)
+                importRequest = ImportRequest(source: .pdf(url))
             case .failure(let error):
                 importError = error.localizedDescription
             }
@@ -134,7 +150,7 @@ struct DeckDetailView: View {
             Text(importError ?? "")
         }
         .sheet(item: $importRequest) { request in
-            ImportReviewView(deck: deck, url: request.url)
+            ImportReviewView(deck: deck, source: request.source)
         }
         .sheet(item: $editingPerson) { person in
             PersonEditView(deck: deck, person: person)

@@ -1,10 +1,12 @@
 import SwiftUI
 import SwiftData
+import PhotosUI
 import UniformTypeIdentifiers
 
 /// Home screen: one deck per group of people, with fanned face previews and a
-/// mastery ring per deck. The PDF import lives here too — it's the whole point
-/// of the app, so it shouldn't be buried inside a deck you have to make first.
+/// mastery ring per deck. The PDF and photo imports live here too — they're the
+/// whole point of the app, so they shouldn't be buried inside a deck you have
+/// to make first.
 struct DeckListView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \Deck.createdAt, order: .reverse) private var decks: [Deck]
@@ -12,13 +14,15 @@ struct DeckListView: View {
     @State private var showingNewDeckAlert = false
     @State private var newDeckName = ""
     @State private var showingFileImporter = false
+    @State private var showingPhotoPicker = false
+    @State private var photoSelection: [PhotosPickerItem] = []
     @State private var importRequest: ImportRequest?
     @State private var importingInto: Deck?
     @State private var importError: String?
     @State private var choosingNewDeck = false
     @State private var renamingDeck: Deck?
 
-    private static let pitch = "Import a PDF of headshots. Every face is found, the name printed with it is read, and you get a deck of flashcards — no typing, no cropping."
+    private static let pitch = "Import a PDF or screenshots of headshots. Every face is found, the name printed with it is read, and you get a deck of flashcards — no typing, no cropping."
 
     var body: some View {
         NavigationStack {
@@ -31,6 +35,7 @@ struct DeckListView: View {
                     } actions: {
                         Button("Import a PDF") { showingFileImporter = true }
                             .buttonStyle(.borderedProminent)
+                        Button("Import Screenshots") { showingPhotoPicker = true }
                         Button("Take Photos") { promptForNewDeck() }
                     }
                 } else {
@@ -89,6 +94,7 @@ struct DeckListView: View {
             .renameDeckAlert($renamingDeck)
             .confirmationDialog("New Deck", isPresented: $choosingNewDeck, titleVisibility: .hidden) {
                 Button("Import a PDF") { showingFileImporter = true }
+                Button("Import Screenshots") { showingPhotoPicker = true }
                 Button("Take Photos") { promptForNewDeck() }
                 Button("Cancel", role: .cancel) {}
             }
@@ -99,10 +105,17 @@ struct DeckListView: View {
             } message: {
                 Text("Name it, then add people with your camera or photo library.")
             }
+            .photosPicker(isPresented: $showingPhotoPicker, selection: $photoSelection,
+                          maxSelectionCount: 20, matching: .images)
+            .onChange(of: photoSelection) { _, items in
+                guard !items.isEmpty else { return }
+                startImport(.photos(items), deckName: "New Deck")
+                photoSelection = []
+            }
             .fileImporter(isPresented: $showingFileImporter, allowedContentTypes: [.pdf]) { result in
                 switch result {
                 case .success(let url):
-                    startImport(from: url)
+                    startImport(.pdf(url), deckName: Self.groupName(from: url))
                 case .failure(let error):
                     importError = error.localizedDescription
                 }
@@ -117,7 +130,7 @@ struct DeckListView: View {
             }
             .sheet(item: $importRequest, onDismiss: discardEmptyImportDeck) { request in
                 if let deck = importingInto {
-                    ImportReviewView(deck: deck, url: request.url)
+                    ImportReviewView(deck: deck, source: request.source)
                 }
             }
         }
@@ -140,11 +153,12 @@ struct DeckListView: View {
 
     /// Importing from the home screen makes the group for you, named after the
     /// file, so the first thing a newcomer does is the thing the app is for.
-    private func startImport(from url: URL) {
-        let deck = Deck(name: Self.groupName(from: url))
+    /// Photos have no file name to borrow; rename the deck afterwards.
+    private func startImport(_ source: ImportSource, deckName: String) {
+        let deck = Deck(name: deckName)
         context.insert(deck)
         importingInto = deck
-        importRequest = ImportRequest(url: url)
+        importRequest = ImportRequest(source: source)
     }
 
     /// Backing out of the review sheet shouldn't leave an empty group behind.
@@ -272,7 +286,7 @@ private struct DeckRow: View {
     }
 
     private var subtitle: String {
-        guard !deck.people.isEmpty else { return "Empty — import a PDF" }
+        guard !deck.people.isEmpty else { return "Empty — import a PDF or screenshots" }
         if isUntouchedSample {
             return "\(deck.people.count) faces to practice on"
         }
