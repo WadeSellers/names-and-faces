@@ -89,6 +89,7 @@ TRY IT FIRST
 No PDF handy? The app comes with a deck of US Presidents, 45 faces, so you can play the game right now and finally learn which one is Chester A. Arthur.
 
 ALSO IN THERE
+• Import screenshots or photos of a roster as well as PDFs
 • Add people one at a time with the camera or your photo library
 • Crop any portrait by tapping it; the original is always kept, so no crop is permanent
 • Reset your progress on a deck without losing the people
@@ -100,6 +101,10 @@ Built by one person, for the Monday morning when a room full of new faces walks 
 
 ## What's New (1.3)
 ```
+Import from screenshots and photos, not just PDFs. Screenshot a staff page, a cast list or a video call grid, or take a picture of a printed sheet, then choose Import Screenshots and pick them. Every face and name is found the same way, still entirely on your iPhone.
+
+Sheets with a small label above each photo and the name below it now read the name, not the label.
+
 You can now rename a deck. Press and hold it in the list, swipe it, or tap the deck's name at the top of the screen. Your faces and progress stay exactly as they were.
 ```
 
@@ -132,6 +137,12 @@ PDF", and pick it.
 The app will extract 9 portraits with their names and show the review screen.
 Tap "Add 9 People", then "Study" to see the flashcards.
 
+Import also works from screenshots and photos: tap "New Deck", choose
+"Import Screenshots", and pick one or more images of a page of headshots
+(for example a screenshot of the sample PDF). The same review screen
+appears. This uses the system photo picker, so no photo library permission
+is requested.
+
 The sample contains public-domain US presidential portraits, so no real
 personal data is involved in review.
 
@@ -140,11 +151,12 @@ The app seeds a "US Presidents" deck on first launch. Tap it, then "Study".
 
 NOTE ON THE SIMULATOR: face detection requires a physical device. Apple's
 Vision framework cannot create an inference context in the iOS Simulator, so
-PDF import will fail there. The bundled US Presidents deck works everywhere.
+PDF and screenshot import will fail there. The bundled US Presidents deck
+works everywhere.
 
 PRIVACY: the app collects nothing and transmits nothing. Camera and photo
-library access are optional and used only to add a person's portrait, stored
-locally.
+library access are optional and used only to add a person's portrait or to
+read a roster image, stored locally.
 ```
 Attach: `Tests/Fixtures/A-grid-name-below.pdf`
 
